@@ -7,7 +7,7 @@
 
 #include <QWidget>
 #include <QVector>
-#include "gamecell.h"
+#include "Gamecell.h"
 
 class GameBoard : public QWidget {
     Q_OBJECT
@@ -25,10 +25,13 @@ private:
     int mineCount;
     void placeMines(int firstX, int firstY);
     void revealCell(int x, int y);
+    void revealEmptyCells(int x, int y);
     void gameOver(bool won);
 
 private slots:
     void handleCellClick(int x, int y);
+    void handleCellRightClick(int x, int y);
+    void handleCellMiddleClick(int x, int y);
 };
 
 #endif//MINESWEEPER_GAMEBOARD_H

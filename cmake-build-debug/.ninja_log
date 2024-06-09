@@ -21,3 +21,13 @@
 7	44	1717952281898898426	/Users/alw/CLionProjects/Minesweeper/cmake-build-debug/Minesweeper_autogen/mocs_compilation.cpp	501cbdedbdb650ee
 47	790	1717952282639164738	CMakeFiles/Minesweeper.dir/MainWindow.cpp.o	d39b84e54ed1839c
 790	830	1717952282682616269	Minesweeper	eb331128c8023239
+11	293	1717952611540543000	Minesweeper_autogen/timestamp	501cbdedbdb650ee
+11	293	1717952611540543000	Minesweeper_autogen/mocs_compilation.cpp	501cbdedbdb650ee
+11	293	1717952611540543000	/Users/alw/CLionProjects/Minesweeper/cmake-build-debug/Minesweeper_autogen/timestamp	501cbdedbdb650ee
+11	293	1717952611540543000	/Users/alw/CLionProjects/Minesweeper/cmake-build-debug/Minesweeper_autogen/mocs_compilation.cpp	501cbdedbdb650ee
+293	1326	1717952612569561336	CMakeFiles/Minesweeper.dir/main.cpp.o	f9a77c21f9aec465
+293	1327	1717952612570061879	CMakeFiles/Minesweeper.dir/Gamecell.cpp.o	20e0cd15ab0ab85f
+293	1328	1717952612574329432	CMakeFiles/Minesweeper.dir/Minesweeper_autogen/mocs_compilation.cpp.o	4eea0bc1d7a22ebf
+294	1329	1717952612572910553	CMakeFiles/Minesweeper.dir/MainWindow.cpp.o	d39b84e54ed1839c
+293	1366	1717952612616510667	CMakeFiles/Minesweeper.dir/Gameboard.cpp.o	202eda4da9c4cfb5
+1366	1525	1717952612777830798	Minesweeper	eb331128c8023239

@@ -7,6 +7,7 @@
 
 #include <QPushButton>
 
+
 class GameCell : public QPushButton {
     Q_OBJECT
 
@@ -15,9 +16,14 @@ public:
     void reveal();
     bool hasMine() const;
     void setMine(bool hasMine);
+    bool isRevealed() const;
+    void setNumber(int number);
+    int getNumber() const;
 
 signals:
-    void clicked(int x, int y);
+    void cellClicked(int x, int y);
+    void cellRightClicked(int x, int y);
+    void cellMiddleClicked(int x, int y);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -26,6 +32,8 @@ private:
     int posX;
     int posY;
     bool mine;
+    bool revealed;
+    int number;
 };
 
 #endif//MINESWEEPER_GAMECELL_H
