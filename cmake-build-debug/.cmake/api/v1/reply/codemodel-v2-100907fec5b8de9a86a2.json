@@ -1,0 +1,78 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.27"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Minesweeper",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Minesweeper::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Minesweeper-Debug-01b377042f59197fb84f.json",
+					"name" : "Minesweeper",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Minesweeper_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Minesweeper_autogen-Debug-1f6e8442d3ff89a6c4c4.json",
+					"name" : "Minesweeper_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Minesweeper_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Minesweeper_autogen_timestamp_deps-Debug-e9fc433f4fab16c3a8ab.json",
+					"name" : "Minesweeper_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/alw/CLionProjects/Minesweeper/cmake-build-debug",
+		"source" : "/Users/alw/CLionProjects/Minesweeper"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}
