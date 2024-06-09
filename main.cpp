@@ -1,6 +1,4 @@
 #include <QApplication>
-#include <QPushButton>
-#include "Minesweeper.h"
 #include "MainWindow.h"
 
 int main(int argc, char *argv[]) {

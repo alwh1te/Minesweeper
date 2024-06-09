@@ -1,7 +1,7 @@
 //
 // Created by Alexander on 09.06.2024.
 //
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include <QInputDialog>
 #include <QMenuBar>
 #include <QMessageBox>

@@ -34,7 +34,6 @@ private:
 private slots:
     void handleCellClick(int x, int y);
     void handleCellRightClick(int x, int y);
-    void handleCellMiddleClick(int x, int y);
 };
 
 #endif//MINESWEEPER_GAMEBOARD_H

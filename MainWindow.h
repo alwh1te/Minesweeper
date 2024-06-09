@@ -6,7 +6,7 @@
 #define MINESWEEPER_MAINWINDOW_H
 
 #include <QMainWindow>
-#include "gameboard.h"
+#include "Gameboard.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT

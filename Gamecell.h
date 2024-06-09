@@ -23,7 +23,6 @@ public:
 signals:
     void cellClicked(int x, int y);
     void cellRightClicked(int x, int y);
-    void cellMiddleClicked(int x, int y);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;

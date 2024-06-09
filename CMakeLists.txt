@@ -14,8 +14,6 @@ find_package(Qt5 COMPONENTS
         REQUIRED)
 
 add_executable(Minesweeper main.cpp
-        Minesweeper.cpp
-        Minesweeper.h
         MainWindow.h
         Gameboard.h
         Gamecell.h

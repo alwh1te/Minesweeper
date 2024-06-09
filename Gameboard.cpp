@@ -23,7 +23,6 @@ void GameBoard::setupBoard(int size, int mines) {
             layout->addWidget(cells[i][j], i, j);
             connect(cells[i][j], &GameCell::cellClicked, this, &GameBoard::handleCellClick);
             connect(cells[i][j], &GameCell::cellRightClicked, this, &GameBoard::handleCellRightClick);
-            connect(cells[i][j], &GameCell::cellMiddleClicked, this, &GameBoard::handleCellMiddleClick);
         }
     }
     setLayout(layout);
@@ -120,39 +119,6 @@ void GameBoard::handleCellRightClick(int x, int y) {
     cells[x][y]->toggleFlag();
 }
 
-void GameBoard::handleCellMiddleClick(int x, int y) {
-    qDebug() << "Cell middle-clicked at (" << x << ", " << y << ")";
-    if (!cells[x][y]->isRevealed()) return;
-
-    int flaggedCount = 0;
-    for (int dx = -1; dx <= 1; ++dx) {
-        for (int dy = -1; dy <= 1; ++dy) {
-            int nx = x + dx;
-            int ny = y + dy;
-            if (nx >= 0 && nx < boardSize && ny >= 0 && ny < boardSize && cells[nx][ny]->text() == "F") {
-                flaggedCount++;
-            }
-        }
-    }
-
-    if (flaggedCount == cells[x][y]->getNumber()) {
-        for (int dx = -1; dx <= 1; ++dx) {
-            for (int dy = -1; dy <= 1; ++dy) {
-                revealCell(x + dx, y + dy);
-            }
-        }
-    } else {
-        for (int dx = -1; dx <= 1; ++dx) {
-            for (int dy = -1; dy <= 1; ++dy) {
-                int nx = x + dx;
-                int ny = y + dy;
-                if (nx >= 0 && nx < boardSize && ny >= 0 && ny < boardSize && !cells[nx][ny]->isRevealed()) {
-                    cells[nx][ny]->setStyleSheet("background-color: yellow");
-                }
-            }
-        }
-    }
-}
 
 void GameBoard::checkForWin() {
     int revealedCount = 0;
