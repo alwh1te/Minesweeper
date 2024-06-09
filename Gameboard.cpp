@@ -2,15 +2,19 @@
 #include <QGridLayout>
 #include <QRandomGenerator>
 #include <QMessageBox>
-#include <QInputDialog>
+#include <QDebug>
 
-GameBoard::GameBoard(QWidget *parent) : QWidget(parent) {}
+GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardSize(0), mineCount(0), firstClick(true) {
+    setMinimumSize(300, 300); // Устанавливаем минимальный размер для игрового поля
+}
 
 void GameBoard::setupBoard(int size, int mines) {
     boardSize = size;
     mineCount = mines;
+    firstClick = true;
 
     QGridLayout *layout = new QGridLayout(this);
+    layout->setSpacing(1); // Устанавливаем расстояние между ячейками
     cells.resize(size);
     for (int i = 0; i < size; ++i) {
         cells[i].resize(size);
@@ -25,8 +29,18 @@ void GameBoard::setupBoard(int size, int mines) {
     setLayout(layout);
 }
 
+void GameBoard::resizeEvent(QResizeEvent *event) {
+    QWidget::resizeEvent(event);
+    int cellSize = qMin(width() / boardSize, height() / boardSize);
+
+    for (int i = 0; i < boardSize; ++i) {
+        for (int j = 0; j < boardSize; ++j) {
+            cells[i][j]->setFixedSize(cellSize, cellSize);
+        }
+    }
+}
+
 void GameBoard::placeMines(int firstX, int firstY) {
-    // Расстановка мин с учетом того, что первая открытая клетка не может быть миной
     int placedMines = 0;
     while (placedMines < mineCount) {
         int x = QRandomGenerator::global()->bounded(boardSize);
@@ -36,6 +50,27 @@ void GameBoard::placeMines(int firstX, int firstY) {
         }
         cells[x][y]->setMine(true);
         placedMines++;
+    }
+    updateNumbers();
+}
+
+void GameBoard::updateNumbers() {
+    for (int i = 0; i < boardSize; ++i) {
+        for (int j = 0; j < boardSize; ++j) {
+            if (!cells[i][j]->hasMine()) {
+                int mineCount = 0;
+                for (int dx = -1; dx <= 1; ++dx) {
+                    for (int dy = -1; dy <= 1; ++dy) {
+                        int nx = i + dx;
+                        int ny = j + dy;
+                        if (nx >= 0 && nx < boardSize && ny >= 0 && ny < boardSize && cells[nx][ny]->hasMine()) {
+                            mineCount++;
+                        }
+                    }
+                }
+                cells[i][j]->setNumber(mineCount);
+            }
+        }
     }
 }
 
@@ -49,7 +84,9 @@ void GameBoard::revealCell(int x, int y) {
     } else if (cells[x][y]->getNumber() == 0) {
         revealEmptyCells(x, y);
     }
+    checkForWin(); // Проверка победы после каждого открытия ячейки
 }
+
 
 void GameBoard::revealEmptyCells(int x, int y) {
     for (int dx = -1; dx <= 1; ++dx) {
@@ -59,6 +96,21 @@ void GameBoard::revealEmptyCells(int x, int y) {
     }
 }
 
+void GameBoard::checkForWin() {
+    int revealedCount = 0;
+    for (int i = 0; i < boardSize; ++i) {
+        for (int j = 0; j < boardSize; ++j) {
+            if (cells[i][j]->isRevealed()) {
+                revealedCount++;
+            }
+        }
+    }
+    if (revealedCount == (boardSize * boardSize) - mineCount) {
+        gameOver(true);
+    }
+}
+
+
 void GameBoard::gameOver(bool won) {
     QString message = won ? tr("Congratulations, you won!") : tr("Game over, you lost!");
     QMessageBox::information(this, tr("Game Over"), message);
@@ -67,22 +119,22 @@ void GameBoard::gameOver(bool won) {
             cells[i][j]->reveal();
         }
     }
+    setDisabled(true); // Отключаем игровое поле после окончания игры
 }
 
+
 void GameBoard::handleCellClick(int x, int y) {
-    if (!cells[x][y]->isRevealed()) {
-        if (cells[x][y]->hasMine()) {
-            gameOver(false);
-        } else {
-            revealCell(x, y);
-        }
+    qDebug() << "Cell clicked at (" << x << ", " << y << ")";
+    if (firstClick) {
+        placeMines(x, y);
+        firstClick = false;
     }
+    revealCell(x, y);
 }
 
 void GameBoard::handleCellRightClick(int x, int y) {
+    qDebug() << "Cell right-clicked at (" << x << ", " << y << ")";
     if (!cells[x][y]->isRevealed()) {
-        // Установка/снятие флажка на клетке
-        // Например, изменение текста или иконки клетки
         if (cells[x][y]->text() == "F") {
             cells[x][y]->setText("");
         } else {
@@ -92,36 +144,35 @@ void GameBoard::handleCellRightClick(int x, int y) {
 }
 
 void GameBoard::handleCellMiddleClick(int x, int y) {
-    if (cells[x][y]->isRevealed() && cells[x][y]->getNumber() > 0) {
-        int flagsAround = 0;
-        for (int dx = -1; dx <= 1; ++dx) {
-            for (int dy = -1; dy <= 1; ++dy) {
-                if (x + dx >= 0 && x + dx < boardSize && y + dy >= 0 && y + dy < boardSize) {
-                    if (cells[x + dx][y + dy]->text() == "F") {
-                        flagsAround++;
-                    }
-                }
+    qDebug() << "Cell middle-clicked at (" << x << ", " << y << ")";
+    if (!cells[x][y]->isRevealed()) return;
+
+    int flaggedCount = 0;
+    for (int dx = -1; dx <= 1; ++dx) {
+        for (int dy = -1; dy <= 1; ++dy) {
+            int nx = x + dx;
+            int ny = y + dy;
+            if (nx >= 0 && nx < boardSize && ny >= 0 && ny < boardSize && cells[nx][ny]->text() == "F") {
+                flaggedCount++;
             }
         }
-        if (flagsAround == cells[x][y]->getNumber()) {
-            revealEmptyCells(x, y);
-        } else {
-            // Подсветка неоткрытых клеток, если количество флагов не совпадает
-            for (int dx = -1; dx <= 1; ++dx) {
-                for (int dy = -1; dy <= 1; ++dy) {
-                    if (x + dx >= 0 && x + dx < boardSize && y + dy >= 0 && y + dy < boardSize) {
-                        if (!cells[x + dx][y + dy]->isRevealed() && cells[x + dx][y + dy]->text() != "F") {
-                            // Пример: изменение цвета фона клетки
-                            cells[x + dx][y + dy]->setStyleSheet("background-color: yellow");
-                        }
-                    }
+    }
+
+    if (flaggedCount == cells[x][y]->getNumber()) {
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dy = -1; dy <= 1; ++dy) {
+                revealCell(x + dx, y + dy);
+            }
+        }
+    } else {
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dy = -1; dy <= 1; ++dy) {
+                int nx = x + dx;
+                int ny = y + dy;
+                if (nx >= 0 && nx < boardSize && ny >= 0 && ny < boardSize && !cells[nx][ny]->isRevealed()) {
+                    cells[nx][ny]->setStyleSheet("background-color: yellow");
                 }
             }
         }
     }
-}
-
-void GameBoard::resizeEvent(QResizeEvent *event) {
-    QWidget::resizeEvent(event);
-    // Обработка изменения размера окна для корректного отображения поля
 }

@@ -7,18 +7,17 @@
 
 #include <QPushButton>
 
-
 class GameCell : public QPushButton {
     Q_OBJECT
 
 public:
-    explicit GameCell(int x, int y, QWidget *parent = nullptr);
-    void reveal();
-    bool hasMine() const;
+    GameCell(int x, int y, QWidget *parent = nullptr);
     void setMine(bool hasMine);
-    bool isRevealed() const;
+    bool hasMine() const;
     void setNumber(int number);
     int getNumber() const;
+    void reveal();
+    bool isRevealed() const;
 
 signals:
     void cellClicked(int x, int y);
@@ -29,11 +28,10 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
-    int posX;
-    int posY;
+    int posX, posY;
     bool mine;
-    bool revealed;
     int number;
+    bool revealed;
 };
 
 #endif//MINESWEEPER_GAMECELL_H

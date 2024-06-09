@@ -23,10 +23,13 @@ private:
     QVector<QVector<GameCell*>> cells;
     int boardSize;
     int mineCount;
+    bool firstClick;
     void placeMines(int firstX, int firstY);
     void revealCell(int x, int y);
     void revealEmptyCells(int x, int y);
     void gameOver(bool won);
+    void checkForWin();
+    void updateNumbers();
 
 private slots:
     void handleCellClick(int x, int y);
