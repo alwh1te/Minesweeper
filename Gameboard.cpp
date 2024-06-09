@@ -1,11 +1,11 @@
 #include "Gameboard.h"
-#include <QGridLayout>
-#include <QRandomGenerator>
-#include <QMessageBox>
 #include <QDebug>
+#include <QGridLayout>
+#include <QMessageBox>
+#include <QRandomGenerator>
 
 GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardSize(0), mineCount(0), firstClick(true) {
-    setMinimumSize(300, 300); // Устанавливаем минимальный размер для игрового поля
+    setMinimumSize(300, 300);// Устанавливаем минимальный размер для игрового поля
 }
 
 void GameBoard::setupBoard(int size, int mines) {
@@ -14,7 +14,7 @@ void GameBoard::setupBoard(int size, int mines) {
     firstClick = true;
 
     QGridLayout *layout = new QGridLayout(this);
-    layout->setSpacing(1); // Устанавливаем расстояние между ячейками
+    layout->setSpacing(1);// Устанавливаем расстояние между ячейками
     cells.resize(size);
     for (int i = 0; i < size; ++i) {
         cells[i].resize(size);
@@ -84,9 +84,8 @@ void GameBoard::revealCell(int x, int y) {
     } else if (cells[x][y]->getNumber() == 0) {
         revealEmptyCells(x, y);
     }
-    checkForWin(); // Проверка победы после каждого открытия ячейки
+    checkForWin();// Проверка победы после каждого открытия ячейки
 }
-
 
 void GameBoard::revealEmptyCells(int x, int y) {
     for (int dx = -1; dx <= 1; ++dx) {
@@ -96,21 +95,6 @@ void GameBoard::revealEmptyCells(int x, int y) {
     }
 }
 
-void GameBoard::checkForWin() {
-    int revealedCount = 0;
-    for (int i = 0; i < boardSize; ++i) {
-        for (int j = 0; j < boardSize; ++j) {
-            if (cells[i][j]->isRevealed()) {
-                revealedCount++;
-            }
-        }
-    }
-    if (revealedCount == (boardSize * boardSize) - mineCount) {
-        gameOver(true);
-    }
-}
-
-
 void GameBoard::gameOver(bool won) {
     QString message = won ? tr("Congratulations, you won!") : tr("Game over, you lost!");
     QMessageBox::information(this, tr("Game Over"), message);
@@ -119,9 +103,8 @@ void GameBoard::gameOver(bool won) {
             cells[i][j]->reveal();
         }
     }
-    setDisabled(true); // Отключаем игровое поле после окончания игры
+    setDisabled(true);// Отключаем игровое поле после окончания игры
 }
-
 
 void GameBoard::handleCellClick(int x, int y) {
     qDebug() << "Cell clicked at (" << x << ", " << y << ")";
@@ -134,13 +117,7 @@ void GameBoard::handleCellClick(int x, int y) {
 
 void GameBoard::handleCellRightClick(int x, int y) {
     qDebug() << "Cell right-clicked at (" << x << ", " << y << ")";
-    if (!cells[x][y]->isRevealed()) {
-        if (cells[x][y]->text() == "F") {
-            cells[x][y]->setText("");
-        } else {
-            cells[x][y]->setText("F");
-        }
-    }
+    cells[x][y]->toggleFlag();
 }
 
 void GameBoard::handleCellMiddleClick(int x, int y) {
@@ -174,5 +151,19 @@ void GameBoard::handleCellMiddleClick(int x, int y) {
                 }
             }
         }
+    }
+}
+
+void GameBoard::checkForWin() {
+    int revealedCount = 0;
+    for (int i = 0; i < boardSize; ++i) {
+        for (int j = 0; j < boardSize; ++j) {
+            if (cells[i][j]->isRevealed()) {
+                revealedCount++;
+            }
+        }
+    }
+    if (revealedCount == (boardSize * boardSize) - mineCount) {
+        gameOver(true);
     }
 }

@@ -18,6 +18,7 @@ public:
     int getNumber() const;
     void reveal();
     bool isRevealed() const;
+    void toggleFlag();
 
 signals:
     void cellClicked(int x, int y);
@@ -32,6 +33,7 @@ private:
     bool mine;
     int number;
     bool revealed;
+    bool flagged;
 };
 
 #endif//MINESWEEPER_GAMECELL_H

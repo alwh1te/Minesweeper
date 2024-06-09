@@ -1,8 +1,9 @@
 #include "Gamecell.h"
 #include <QMouseEvent>
 
-GameCell::GameCell(int x, int y, QWidget *parent) : QPushButton(parent), posX(x), posY(y), mine(false), number(0), revealed(false) {
-    setFixedSize(30, 30); // Размер ячейки для лучшего визуального отображения
+GameCell::GameCell(int x, int y, QWidget *parent)
+    : QPushButton(parent), posX(x), posY(y), mine(false), number(0), revealed(false), flagged(false) {
+    setFixedSize(30, 30); // Начальный размер ячейки
 }
 
 void GameCell::setMine(bool hasMine) {
@@ -25,19 +26,32 @@ int GameCell::getNumber() const {
 }
 
 void GameCell::reveal() {
+    if (revealed) return;
     revealed = true;
-    setEnabled(false); // Делаем ячейку неактивной
     if (mine) {
-        setText("M"); // Показываем мину
+        setText("X");
+        setStyleSheet("background-color: red"); // Красим клетку в красный цвет при раскрытии мины
     } else if (number > 0) {
         setText(QString::number(number));
-    } else {
-        setText("");
+        setStyleSheet("background-color: grey"); // Красим клетку в красный цвет при раскрытии мины
     }
+    setEnabled(false);
 }
 
 bool GameCell::isRevealed() const {
     return revealed;
+}
+
+void GameCell::toggleFlag() {
+    if (revealed) return;
+    flagged = !flagged;
+//    if (flagged) {
+//        setText("F");
+//        setStyleSheet("background-color: lightcoral"); // Красим клетку в красный цвет при отметке флага
+//    } else {
+//        setText("");
+//        setStyleSheet("");
+//    }
 }
 
 void GameCell::mousePressEvent(QMouseEvent *event) {
@@ -48,5 +62,4 @@ void GameCell::mousePressEvent(QMouseEvent *event) {
     } else if (event->button() == Qt::MiddleButton) {
         emit cellMiddleClicked(posX, posY);
     }
-    QPushButton::mousePressEvent(event);
 }
