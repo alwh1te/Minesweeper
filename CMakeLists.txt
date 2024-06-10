@@ -6,7 +6,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-
 find_package(Qt5 COMPONENTS
         Core
         Gui
@@ -22,7 +21,7 @@ add_executable(Minesweeper main.cpp
         MainWindow.cpp
         NewGameDialog.cpp
         NewGameDialog.h
-        temp.cpp
+        resources.qrc
 )
 target_link_libraries(Minesweeper
         Qt5::Core

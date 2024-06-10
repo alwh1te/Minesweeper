@@ -1,9 +1,14 @@
 #include "GameCell.h"
+#include <QFont>
 
 GameCell::GameCell(int x, int y, QWidget *parent)
     : QPushButton(parent), posX(x), posY(y), mine(false), number(0), revealed(false), flagged(false) {
     setFixedSize(30, 30);
-    setStyleSheet("background-color: blue");
+//    setStyleSheet("background-color: blue");
+    mineIcon = QIcon(":/icons/mine.png");
+    flagIcon = QIcon(":/icons/flag.png");
+    setIconSize(QSize(30, 30));
+    setFont(QFont("Arial", 14, QFont::Bold));
 }
 
 void GameCell::setMine(bool hasMine) {
@@ -27,8 +32,7 @@ void GameCell::reveal() {
     revealed = true;
     setStyleSheet("background-color: grey");
     if (mine) {
-        setText("X");
-        setStyleSheet("background-color: red");
+        setIcon(mineIcon);
     } else if (number > 0) {
         setText(QString::number(number));
     }
@@ -42,11 +46,10 @@ void GameCell::toggleFlag() {
     if (revealed) return;
     flagged = !flagged;
     if (flagged) {
-        setText("F");
-        setStyleSheet("background-color: lightcoral");
+        setIcon(flagIcon);
     } else {
+        setIcon(QIcon());
         setText("");
-        setStyleSheet("background-color: blue");
     }
 }
 

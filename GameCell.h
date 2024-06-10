@@ -5,6 +5,7 @@
 
 #include <QMouseEvent>
 #include <QPushButton>
+#include <QIcon>
 
 class GameCell : public QPushButton {
     Q_OBJECT
@@ -34,6 +35,8 @@ private:
     int number;
     bool revealed;
     bool flagged;
+    QIcon mineIcon;
+    QIcon flagIcon;
 };
 
 #endif // MINESWEEPER_GAMECELL_H

@@ -81,9 +81,9 @@ void GameBoard::resizeEvent(QResizeEvent *event) {
     for (int i = 0; i < boardWidth; ++i) {
         for (int j = 0; j < boardHeight; ++j) {
             cells[i][j]->setFixedSize(cellSize, cellSize);
+            cells[i][j]->setIconSize(QSize(cellSize, cellSize)); // Обновление размера иконок
         }
     }
-    // TODO fix windows scaling
 }
 
 void GameBoard::placeMines(int firstX, int firstY) {
