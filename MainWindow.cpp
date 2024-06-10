@@ -3,18 +3,29 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QToolBar>
-#include <QCloseEvent>
-#include <QFile>
 #include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), gameBoard(nullptr) {
+    : QMainWindow(parent), gameBoard(nullptr), saveFileName(QDir::homePath() + "/minesweeper_save.ini") {
     createMenus();
     createToolBar();
-    autoLoadGame();
+
+    // Попробуйте загрузить сохраненную игру, если файл существует
+    QFile file(saveFileName);
+    if (file.exists()) {
+        gameBoard = new GameBoard(this);
+        setCentralWidget(gameBoard);
+        gameBoard->loadGameState(saveFileName);
+        connect(gameBoard, &GameBoard::gameOverSignal, this, &MainWindow::gameFinished);
+    } else {
+        newGame(); // Если файл не существует, начните новую игру
+    }
 }
 
 MainWindow::~MainWindow() {
+    if (gameBoard) {
+        gameBoard->saveGameState(saveFileName);
+    }
     delete gameBoard;
 }
 
@@ -22,12 +33,6 @@ void MainWindow::createMenus() {
     QMenu *gameMenu = menuBar()->addMenu(tr("Game"));
     QAction *newGameAction = gameMenu->addAction(tr("New Game"));
     connect(newGameAction, &QAction::triggered, this, &MainWindow::newGame);
-
-    QAction *saveGameAction = gameMenu->addAction(tr("Save Game"));
-    connect(saveGameAction, &QAction::triggered, this, &MainWindow::saveGame);
-
-    QAction *loadGameAction = gameMenu->addAction(tr("Load Game"));
-    connect(loadGameAction, &QAction::triggered, this, &MainWindow::loadGame);
 }
 
 void MainWindow::createToolBar() {
@@ -35,14 +40,6 @@ void MainWindow::createToolBar() {
     QAction *newGameAction = new QAction(tr("New Game"), this);
     toolBar->addAction(newGameAction);
     connect(newGameAction, &QAction::triggered, this, &MainWindow::newGame);
-
-    QAction *saveGameAction = new QAction(tr("Save Game"), this);
-    toolBar->addAction(saveGameAction);
-    connect(saveGameAction, &QAction::triggered, this, &MainWindow::saveGame);
-
-    QAction *loadGameAction = new QAction(tr("Load Game"), this);
-    toolBar->addAction(loadGameAction);
-    connect(loadGameAction, &QAction::triggered, this, &MainWindow::loadGame);
 }
 
 void MainWindow::newGame() {
@@ -67,98 +64,5 @@ void MainWindow::newGame() {
 void MainWindow::gameFinished(bool won) {
     QString message = won ? tr("Congratulations, you won!") : tr("Game over, you lost!");
     QMessageBox::information(this, tr("Game Over"), message);
+    // newGame();
 }
-
-void MainWindow::saveGame() {
-    if (gameBoard) {
-        gameBoard->saveGameState("autosave.ini");
-    }
-}
-
-void MainWindow::loadGame() {
-    if (QFile::exists("autosave.ini")) {
-        if (gameBoard) {
-            delete gameBoard;
-        }
-
-        gameBoard = new GameBoard(this);
-        setCentralWidget(gameBoard);
-        gameBoard->loadGameState("autosave.ini");
-
-        connect(gameBoard, &GameBoard::gameOverSignal, this, &MainWindow::gameFinished);
-    } else {
-        QMessageBox::warning(this, tr("Load Game"), tr("No saved game found."));
-    }
-}
-
-void MainWindow::closeEvent(QCloseEvent *event) {
-    saveGame();
-    QMainWindow::closeEvent(event);
-}
-
-void MainWindow::autoLoadGame() {
-    if (QFile::exists("autosave.ini")) {
-        loadGame();
-    } else {
-        newGame();
-    }
-}
-
-
-void MainWindow::createMenus() {
-    QMenu *gameMenu = menuBar()->addMenu(tr("Game"));
-    QAction *newGameAction = gameMenu->addAction(tr("New Game"));
-    connect(newGameAction, &QAction::triggered, this, &MainWindow::newGame);
-
-    QAction *saveGameAction = gameMenu->addAction(tr("Save Game"));
-    connect(saveGameAction, &QAction::triggered, this, &MainWindow::saveGame);
-
-    QAction *loadGameAction = gameMenu->addAction(tr("Load Game"));
-    connect(loadGameAction, &QAction::triggered, this, &MainWindow::loadGame);
-}
-
-void MainWindow::createToolBar() {
-    QToolBar *toolBar = addToolBar(tr("Game"));
-    QAction *newGameAction = new QAction(tr("New Game"), this);
-    toolBar->addAction(newGameAction);
-    connect(newGameAction, &QAction::triggered, this, &MainWindow::newGame);
-
-    QAction *saveGameAction = new QAction(tr("Save Game"), this);
-    toolBar->addAction(saveGameAction);
-    connect(saveGameAction, &QAction::triggered, this, &MainWindow::saveGame);
-
-    QAction *loadGameAction = new QAction(tr("Load Game"), this);
-    toolBar->addAction(loadGameAction);
-    connect(loadGameAction, &QAction::triggered, this, &MainWindow::loadGame);
-}
-
-
-
-void MainWindow::newGame() {
-    NewGameDialog dialog(this);
-    if (dialog.exec() == QDialog::Accepted) {
-        int width = dialog.getWidth();
-        int height = dialog.getHeight();
-        int mines = dialog.getMines();
-
-        if (gameBoard) {
-            delete gameBoard;
-        }
-
-        gameBoard = new GameBoard(this);
-        setCentralWidget(gameBoard);
-        gameBoard->setupBoard(width, height, mines);
-
-        connect(gameBoard, &GameBoard::gameOverSignal, this, &MainWindow::gameFinished);
-    }
-}
-
-
-void MainWindow::gameFinished(bool won) {
-    QString message = won ? tr("Congratulations, you won!") : tr("Game over, you lost!");
-    QMessageBox::information(this, tr("Game Over"), message);
-//    newGame();
-    // TODO пофиксить баг при выигрыше с первого хода
-}
-
-

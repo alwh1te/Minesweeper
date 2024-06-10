@@ -12,21 +12,15 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-protected:
-    void closeEvent(QCloseEvent *event) override;
-
 private slots:
     void newGame();
     void gameFinished(bool won);
-
-    void saveGame();
-    void loadGame();
 
 private:
     void createMenus();
     void createToolBar();
     GameBoard *gameBoard;
-    void autoLoadGame();
+    QString saveFileName; // Добавлено для хранения имени файла сохранения
 };
 
 #endif // MINESWEEPER_MAINWINDOW_H
