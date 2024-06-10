@@ -52,6 +52,8 @@ void MainWindow::newGame() {
 void MainWindow::gameFinished(bool won) {
     QString message = won ? tr("Congratulations, you won!") : tr("Game over, you lost!");
     QMessageBox::information(this, tr("Game Over"), message);
+//    newGame();
+    // TODO пофиксить баг при выигрыше с первого хода
 }
 
 

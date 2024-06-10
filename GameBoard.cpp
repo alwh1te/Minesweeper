@@ -11,6 +11,7 @@ GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardWidth(0), boardHei
 GameBoard::~GameBoard() {
     for (int i = 0; i < boardWidth; ++i) {
         for (int j = 0; j < boardHeight; ++j) {
+//            if (cells[i][j])
             delete cells[i][j];
         }
     }
@@ -85,12 +86,12 @@ void GameBoard::updateNumbers() {
 }
 
 void GameBoard::revealCell(int x, int y) {
-    if (x < 0 || x >= boardWidth || y < 0 || y >= boardHeight || cells[x][y]->isRevealed()) {
+    if (x < 0 || x >= boardWidth || y < 0 || y >= boardHeight || cells[x][y]->isRevealed() || cells[x][y]->isFlagged()) {
         return;
     }
     cells[x][y]->reveal();
     if (cells[x][y]->hasMine()) {
-        gameOver(false);
+        gameOver(false, x, y);
     } else if (cells[x][y]->getNumber() == 0) {
         revealEmptyCells(x, y);
     }
@@ -115,7 +116,10 @@ void GameBoard::revealAllMines() {
     }
 }
 
-void GameBoard::gameOver(bool won) {
+void GameBoard::gameOver(bool won, int lastX, int lastY) {
+    if (lastX != -1 && lastY != -1) {
+        cells[lastX][lastY]->setStyleSheet("background-color: lightcoral");
+    }
     if (!won) {
         revealAllMines();
     }
@@ -144,20 +148,6 @@ void GameBoard::handleCellRightClick(int x, int y) {
     } else {
         flaggedMines--;
     }
-
-    if (flaggedMines == mineCount) {
-        int correctlyFlaggedMines = 0;
-        for (int i = 0; i < boardWidth; ++i) {
-            for (int j = 0; j < boardHeight; ++j) {
-                if (cells[i][j]->hasMine() && cells[i][j]->isFlagged()) {
-                    correctlyFlaggedMines++;
-                }
-            }
-        }
-        if (correctlyFlaggedMines == mineCount) {
-            gameOver(true);
-        }
-    }
 }
 
 
@@ -175,24 +165,12 @@ void GameBoard::handleCellMiddleClick(int x, int y) {
             }
         }
     }
-    int correctlyFlaggedMines = 0;
-    for (int dx = -1; dx <= 1; ++dx) {
-        for (int dy = -1; dy <= 1; ++dy) {
-            int nx = x + dx;
-            int ny = y + dy;
-            if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && cells[nx][ny]->hasMine() && cells[nx][ny]->isFlagged()) {
-                correctlyFlaggedMines++;
-            }
-        }
-    }
-    qDebug() << flaggedCount;
-    qDebug() << correctlyFlaggedMines;
-    if (flaggedCount == correctlyFlaggedMines && flaggedCount == cells[x][y]->getNumber()) {
+    if (flaggedCount == cells[x][y]->getNumber()) {
         for (int dx = -1; dx <= 1; ++dx) {
             for (int dy = -1; dy <= 1; ++dy) {
                 int nx = x + dx;
                 int ny = y + dy;
-                if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && !cells[x + dx][y + dy]->hasMine())
+                if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight)
                     revealCell(x + dx, y + dy);
             }
         }
@@ -202,11 +180,11 @@ void GameBoard::handleCellMiddleClick(int x, int y) {
                 int nx = x + dx;
                 int ny = y + dy;
                 if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && !cells[nx][ny]->isRevealed() && !cells[nx][ny]->isFlagged()) {
-//                    if (cells[nx][ny]->styleSheet() == "background-color: yellow") {
-//                        cells[nx][ny]->setStyleSheet("background-color: yellow");
-//                    } else {
-//                        cells[nx][ny]->setStyleSheet("background-color: yellow");
-//                    }
+                    //                    if (cells[nx][ny]->styleSheet() == "background-color: yellow") {
+                    //                        cells[nx][ny]->setStyleSheet("background-color: yellow");
+                    //                    } else {
+                    //                        cells[nx][ny]->setStyleSheet("background-color: yellow");
+                    //                    }
                     cells[nx][ny]->setStyleSheet("background-color: yellow");
                 }
             }

@@ -29,7 +29,7 @@ private:
     void checkForWin();
     void updateNumbers();
     void revealAllMines();
-    void gameOver(bool won);
+    void gameOver(bool won, int lastX = -1, int lastY = -1);
 
 signals:
     void gameOverSignal(bool won);
