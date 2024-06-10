@@ -20,14 +20,17 @@ public:
     bool isRevealed() const;
     void toggleFlag();
     bool isFlagged() const;
+    void setTemporaryIcon(bool temporary);
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+
 
 signals:
+    void middleButtonPressed(int x, int y);
+    void middleButtonReleased(int x, int y);
     void cellClicked(int x, int y);
     void cellRightClicked(int x, int y);
     void cellMiddleClicked(int x, int y);
-
-protected:
-    void mousePressEvent(QMouseEvent *event) override;
 
 private:
     int posX, posY;
@@ -35,6 +38,7 @@ private:
     int number;
     bool revealed;
     bool flagged;
+    bool temporaryIcon;
     QIcon mineIcon;
     QIcon flagIcon;
     QIcon emptyIcon;

@@ -69,6 +69,8 @@ void GameBoard::setupBoard(int width, int height, int mines) {
             connect(cells[i][j], &GameCell::cellClicked, this, &GameBoard::handleCellClick);
             connect(cells[i][j], &GameCell::cellRightClicked, this, &GameBoard::handleCellRightClick);
             connect(cells[i][j], &GameCell::cellMiddleClicked, this, &GameBoard::handleCellMiddleClick);
+            connect(cells[i][j], &GameCell::middleButtonPressed, this, &GameBoard::handleCellMiddlePress);
+            connect(cells[i][j], &GameCell::middleButtonReleased, this, &GameBoard::handleCellMiddleRelease);
         }
     }
     setLayout(layout);
@@ -220,11 +222,36 @@ void GameBoard::handleCellMiddleClick(int x, int y) {
                 int nx = x + dx;
                 int ny = y + dy;
                 if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && !cells[nx][ny]->isRevealed() && !cells[nx][ny]->isFlagged()) {
-                    cells[nx][ny]->setStyleSheet("background-color: rgb(64, 64, 64);");
+//                    cells[nx][ny]->setStyleSheet("background-color: rgb(64, 64, 64);");
                 }
             }
         }
     }
+}
+
+void GameBoard::handleCellMiddlePress(int x, int y) {
+    for (int dx = -1; dx <= 1; ++dx) {
+        for (int dy = -1; dy <= 1; ++dy) {
+            int nx = x + dx;
+            int ny = y + dy;
+            if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && !cells[nx][ny]->isRevealed() && !cells[nx][ny]->isFlagged()) {
+                //                    cells[nx][ny]->setStyleSheet("background-color: rgb(64, 64, 64);");
+                cells[nx][ny]->setTemporaryIcon(true);
+            }
+        }
+    }
+}
+
+void GameBoard::handleCellMiddleRelease(int x, int y) {
+for (int dx = -1; dx <= 1; ++dx) {
+    for (int dy = -1; dy <= 1; ++dy) {
+        int nx = x + dx;
+        int ny = y + dy;
+        if (nx > 0 && nx < boardWidth && ny > 0 && ny < boardHeight && !cells[nx][ny]->isRevealed() && !cells[nx][ny]->isFlagged()) {
+            cells[nx][ny]->setTemporaryIcon(false);
+        }
+    }
+}
 }
 
 void GameBoard::checkForWin() {

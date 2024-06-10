@@ -98,9 +98,25 @@ void GameCell::mousePressEvent(QMouseEvent *event) {
     } else if (event->button() == Qt::RightButton) {
         emit cellRightClicked(posX, posY);
     } else if (event->button() == Qt::MiddleButton) {
-        emit cellMiddleClicked(posX, posY);
+        emit middleButtonPressed(posX, posY);
     }
 }
+
+void GameCell::mouseReleaseEvent(QMouseEvent *event) {
+    if (event->button() == Qt::MiddleButton) {
+        emit middleButtonReleased(posX, posY);
+    }
+}
+
+void GameCell::setTemporaryIcon(bool temporary) {
+    temporaryIcon = temporary;
+    if (temporaryIcon) {
+        setIcon(QIcon(":/icons/q.png"));
+    } else {
+        setIcon(QIcon(":/icons/cell.png"));
+    }
+}
+
 
 QColor GameCell::getColorForNumber(int number) {
     switch (number) {
