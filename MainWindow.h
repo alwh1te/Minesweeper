@@ -2,7 +2,7 @@
 #define MINESWEEPER_MAINWINDOW_H
 
 #include <QMainWindow>
-#include "Gameboard.h"
+#include "GameBoard.h"
 #include "NewGameDialog.h"
 
 class MainWindow : public QMainWindow {
@@ -14,11 +14,14 @@ public:
 
 private slots:
     void newGame();
+    void gameFinished(bool won);  // Новый слот для обработки окончания игры
 
 private:
     void createMenus();
-    void createToolBar();  // Новый метод
+    void createToolBar();
     GameBoard *gameBoard;
+    QMenu *gameMenu;
+    QAction *newGameAction;
 };
 
 #endif // MINESWEEPER_MAINWINDOW_H

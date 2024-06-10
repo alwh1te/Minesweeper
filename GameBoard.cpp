@@ -1,10 +1,10 @@
-#include "Gameboard.h"
+#include "GameBoard.h"
 #include <QDebug>
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QRandomGenerator>
 
-GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardWidth(0), boardHeight(0), mineCount(0), firstClick(true) {
+GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardWidth(0), boardHeight(0), mineCount(0), flaggedMines(0), firstClick(true) {
     setMinimumSize(500, 500);
 }
 
@@ -12,6 +12,7 @@ void GameBoard::setupBoard(int width, int height, int mines) {
     boardWidth = width;
     boardHeight = height;
     mineCount = mines;
+    flaggedMines = 0;
     firstClick = true;
 
     QGridLayout *layout = new QGridLayout(this);
@@ -95,15 +96,22 @@ void GameBoard::revealEmptyCells(int x, int y) {
     }
 }
 
-void GameBoard::gameOver(bool won) {
-    QString message = won ? tr("Congratulations, you won!") : tr("Game over, you lost!");
-    QMessageBox::information(this, tr("Game Over"), message);
+void GameBoard::revealAllMines() {
     for (int i = 0; i < boardWidth; ++i) {
         for (int j = 0; j < boardHeight; ++j) {
-            cells[i][j]->reveal();
+            if (cells[i][j]->hasMine() && !cells[i][j]->isRevealed()) {
+                cells[i][j]->reveal();
+            }
         }
     }
+}
+
+void GameBoard::gameOver(bool won) {
+    if (!won) {
+        revealAllMines();
+    }
     setDisabled(true);
+    emit gameOverSignal(won);  // Извещение об окончании игры
 }
 
 void GameBoard::handleCellClick(int x, int y) {
@@ -117,7 +125,17 @@ void GameBoard::handleCellClick(int x, int y) {
 
 void GameBoard::handleCellRightClick(int x, int y) {
     qDebug() << "Cell right-clicked at (" << x << ", " << y << ")";
+    if (cells[x][y]->isRevealed()) {
+        return;
+    }
+
     cells[x][y]->toggleFlag();
+    if (cells[x][y]->isFlagged()) {
+        flaggedMines++;
+    } else {
+        flaggedMines--;
+    }
+    checkForWin();
 }
 
 void GameBoard::checkForWin() {
@@ -129,7 +147,7 @@ void GameBoard::checkForWin() {
             }
         }
     }
-    if (revealedCount == (boardWidth * boardHeight) - mineCount) {
+    if (revealedCount == (boardWidth * boardHeight) - mineCount && flaggedMines == mineCount) {
         gameOver(true);
     }
 }

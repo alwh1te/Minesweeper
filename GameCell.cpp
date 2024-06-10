@@ -33,6 +33,7 @@ void GameCell::reveal() {
     } else if (number > 0) {
         setText(QString::number(number));
     }
+    setEnabled(false);
 }
 
 bool GameCell::isRevealed() const {
@@ -51,7 +52,7 @@ void GameCell::toggleFlag() {
     }
 }
 
-bool GameCell::isFlagged() {
+bool GameCell::isFlagged() const {
     return flagged;
 }
 

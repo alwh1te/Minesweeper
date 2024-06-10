@@ -15,10 +15,10 @@ find_package(Qt5 COMPONENTS
 
 add_executable(Minesweeper main.cpp
         MainWindow.h
-        Gameboard.h
-        Gamecell.h
-        Gamecell.cpp
-        Gameboard.cpp
+        GameBoard.h
+        GameCell.h
+        GameCell.cpp
+        GameBoard.cpp
         MainWindow.cpp
         NewGameDialog.cpp
         NewGameDialog.h

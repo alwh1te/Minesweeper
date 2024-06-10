@@ -58,4 +58,3 @@ void NewGameDialog::accept() {
         QMessageBox::warning(this, tr("Invalid Input"), tr("Please enter valid numbers. Mines must be less than the total number of cells and greater than 0."));
     }
 }
-

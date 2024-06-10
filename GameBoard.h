@@ -20,13 +20,19 @@ private:
     int boardWidth;
     int boardHeight;
     int mineCount;
+    int flaggedMines;
     bool firstClick;
     void placeMines(int firstX, int firstY);
     void revealCell(int x, int y);
     void revealEmptyCells(int x, int y);
-    void gameOver(bool won);
     void checkForWin();
     void updateNumbers();
+    void revealAllMines();
+
+    void gameOver(bool won);
+
+signals:
+    void gameOverSignal(bool won);
 
 private slots:
     void handleCellClick(int x, int y);
