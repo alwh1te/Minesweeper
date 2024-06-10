@@ -2,6 +2,7 @@
 #define MINESWEEPER_MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
 #include "GameBoard.h"
 #include "NewGameDialog.h"
 
@@ -15,6 +16,9 @@ public:
 private slots:
     void newGame();
     void gameFinished(bool won);
+
+    void saveGame();
+    void loadGame();
 
 private:
     void createMenus();

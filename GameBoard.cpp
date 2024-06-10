@@ -17,6 +17,63 @@ GameBoard::~GameBoard() {
     }
 }
 
+#include <QSettings>
+
+void GameBoard::saveGameState(const QString &fileName) {
+    QSettings settings(fileName, QSettings::IniFormat);
+
+    settings.beginGroup("GameBoard");
+    settings.setValue("Width", boardWidth);
+    settings.setValue("Height", boardHeight);
+    settings.setValue("Mines", mineCount);
+    settings.setValue("FlaggedMines", flaggedMines);
+    settings.setValue("FirstClick", firstClick);
+    settings.endGroup();
+
+    settings.beginGroup("Cells");
+    for (int i = 0; i < boardWidth; ++i) {
+        for (int j = 0; j < boardHeight; ++j) {
+            QString cellKey = QString("Cell_%1_%2").arg(i).arg(j);
+            settings.setValue(cellKey + "/Mine", cells[i][j]->hasMine());
+            settings.setValue(cellKey + "/Number", cells[i][j]->getNumber());
+            settings.setValue(cellKey + "/Revealed", cells[i][j]->isRevealed());
+            settings.setValue(cellKey + "/Flagged", cells[i][j]->isFlagged());
+        }
+    }
+    settings.endGroup();
+}
+
+void GameBoard::loadGameState(const QString &fileName) {
+    QSettings settings(fileName, QSettings::IniFormat);
+
+    settings.beginGroup("GameBoard");
+    int width = settings.value("Width").toInt();
+    int height = settings.value("Height").toInt();
+    int mines = settings.value("Mines").toInt();
+    flaggedMines = settings.value("FlaggedMines").toInt();
+    firstClick = settings.value("FirstClick").toBool();
+    settings.endGroup();
+
+    setupBoard(width, height, mines);
+
+    settings.beginGroup("Cells");
+    for (int i = 0; i < boardWidth; ++i) {
+        for (int j = 0; j < boardHeight; ++j) {
+            QString cellKey = QString("Cell_%1_%2").arg(i).arg(j);
+            cells[i][j]->setMine(settings.value(cellKey + "/Mine").toBool());
+            cells[i][j]->setNumber(settings.value(cellKey + "/Number").toInt());
+            if (settings.value(cellKey + "/Revealed").toBool()) {
+                cells[i][j]->reveal();
+            }
+            if (settings.value(cellKey + "/Flagged").toBool()) {
+                cells[i][j]->toggleFlag();
+            }
+        }
+    }
+    settings.endGroup();
+}
+
+
 void GameBoard::setupBoard(int width, int height, int mines) {
     boardWidth = width;
     boardHeight = height;

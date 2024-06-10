@@ -15,10 +15,38 @@ MainWindow::~MainWindow() {
     delete gameBoard;
 }
 
+void MainWindow::saveGame() {
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Game"), "", tr("INI Files (*.ini)"));
+    if (!fileName.isEmpty()) {
+        gameBoard->saveGameState(fileName);
+    }
+}
+
+void MainWindow::loadGame() {
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Game"), "", tr("INI Files (*.ini)"));
+    if (!fileName.isEmpty()) {
+        if (gameBoard) {
+            delete gameBoard;
+        }
+        gameBoard = new GameBoard(this);
+        setCentralWidget(gameBoard);
+        gameBoard->loadGameState(fileName);
+
+        connect(gameBoard, &GameBoard::gameOverSignal, this, &MainWindow::gameFinished);
+    }
+}
+
+
 void MainWindow::createMenus() {
     QMenu *gameMenu = menuBar()->addMenu(tr("Game"));
     QAction *newGameAction = gameMenu->addAction(tr("New Game"));
     connect(newGameAction, &QAction::triggered, this, &MainWindow::newGame);
+
+    QAction *saveGameAction = gameMenu->addAction(tr("Save Game"));
+    connect(saveGameAction, &QAction::triggered, this, &MainWindow::saveGame);
+
+    QAction *loadGameAction = gameMenu->addAction(tr("Load Game"));
+    connect(loadGameAction, &QAction::triggered, this, &MainWindow::loadGame);
 }
 
 void MainWindow::createToolBar() {
@@ -26,7 +54,16 @@ void MainWindow::createToolBar() {
     QAction *newGameAction = new QAction(tr("New Game"), this);
     toolBar->addAction(newGameAction);
     connect(newGameAction, &QAction::triggered, this, &MainWindow::newGame);
+
+    QAction *saveGameAction = new QAction(tr("Save Game"), this);
+    toolBar->addAction(saveGameAction);
+    connect(saveGameAction, &QAction::triggered, this, &MainWindow::saveGame);
+
+    QAction *loadGameAction = new QAction(tr("Load Game"), this);
+    toolBar->addAction(loadGameAction);
+    connect(loadGameAction, &QAction::triggered, this, &MainWindow::loadGame);
 }
+
 
 
 void MainWindow::newGame() {

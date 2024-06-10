@@ -10,8 +10,11 @@ class GameBoard : public QWidget {
 
 public:
     explicit GameBoard(QWidget *parent = nullptr);
-    ~GameBoard();  // Добавим деструктор для освобождения ресурсов
+    ~GameBoard();
     void setupBoard(int width, int height, int mines);
+
+    void saveGameState(const QString &fileName);
+    void loadGameState(const QString &fileName);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
