@@ -1,8 +1,14 @@
 #include "GameBoard.h"
 
 
-GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardWidth(0), boardHeight(0), mineCount(0), flaggedMines(0), firstClick(true) {
+GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardWidth(0), boardHeight(0), mineCount(0), flaggedMines(0), firstClick(true), elapsedTime(0) {
     setMinimumSize(500, 500);
+    timer = new QTimer(this);
+    timerLabel = new QLabel(this);
+    mineCounterLabel = new QLabel(this);
+    connect(timer, &QTimer::timeout, this, &GameBoard::updateTimer);
+    updateMineCounter();
+    timerLabel->setText("Time: 0");
 }
 
 GameBoard::~GameBoard() {
@@ -57,6 +63,10 @@ void GameBoard::setupBoard(int width, int height, int mines) {
     mineCount = mines;
     flaggedMines = 0;
     firstClick = true;
+    elapsedTime = 0;
+    timer->stop();
+    timerLabel->setText("Time: 0");
+    updateMineCounter();
 
     QGridLayout *layout = new QGridLayout(this);
     layout->setSpacing(1);
@@ -73,6 +83,9 @@ void GameBoard::setupBoard(int width, int height, int mines) {
             connect(cells[i][j], &GameCell::middleButtonReleased, this, &GameBoard::handleCellMiddleRelease);
         }
     }
+
+    layout->addWidget(timerLabel, width, 0, 1, height / 2);
+    layout->addWidget(mineCounterLabel, width, height / 2, 1, height / 2);
     setLayout(layout);
 }
 
@@ -166,6 +179,7 @@ void GameBoard::gameOver(bool won, int lastX, int lastY) {
         revealAllMines(false);
     }
     setDisabled(true);
+    stopTimer();
     emit gameOverSignal(won);
 }
 
@@ -173,9 +187,11 @@ void GameBoard::handleCellClick(int x, int y) {
     qDebug() << "Cell clicked at (" << x << ", " << y << ")";
     if (firstClick) {
         placeMines(x, y);
+        startTimer();
         firstClick = false;
     }
     revealCell(x, y);
+    updateMineCounter();
 }
 
 void GameBoard::handleCellRightClick(int x, int y) {
@@ -190,6 +206,7 @@ void GameBoard::handleCellRightClick(int x, int y) {
     } else {
         flaggedMines--;
     }
+    updateMineCounter();
 }
 
 
@@ -266,4 +283,21 @@ void GameBoard::checkForWin() {
     if (revealedCount == (boardWidth * boardHeight) - mineCount) {
         gameOver(true);
     }
+}
+
+
+void GameBoard::updateTimer() {
+    timerLabel->setText("Time: " + QString::number(++elapsedTime));
+}
+
+void GameBoard::updateMineCounter() {
+    mineCounterLabel->setText("Mines: " + QString::number(mineCount - flaggedMines));
+}
+
+void GameBoard::startTimer() {
+    timer->start(1000);
+}
+
+void GameBoard::stopTimer() {
+    timer->stop();
 }

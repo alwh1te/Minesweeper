@@ -26,7 +26,7 @@ void GameCell::paintEvent(QPaintEvent *event) {
     option.initFrom(this);
     style()->drawControl(QStyle::CE_PushButton, &option, &painter, this);
 
-    int iconPadding = 3;
+    int iconPadding = 7;
 
     QRect iconRect = QRect(iconPadding, iconPadding, width() - 2 * iconPadding, height() - 2 * iconPadding);
     QRect textRect = QRect(iconPadding, iconPadding, width() - 2 * iconPadding, height() - 2 * iconPadding);

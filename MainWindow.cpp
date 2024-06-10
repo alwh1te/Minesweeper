@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 
+
 MainWindow::MainWindow(bool debug, QWidget *parent)
     : QMainWindow(parent), gameBoard(nullptr), saveFileName(QDir::homePath() + "/minesweeper_save.ini") {
     debugMode = debug;

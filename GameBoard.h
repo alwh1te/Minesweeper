@@ -13,6 +13,8 @@
 #include <QTextStream>
 #include <QVector>
 #include <QWidget>
+#include <QTimer>
+#include <QLabel>
 
 class GameBoard : public QWidget {
     Q_OBJECT
@@ -23,7 +25,7 @@ public:
     void setupBoard(int width, int height, int mines);
     void saveGameState(const QString &fileName);
     void loadGameState(const QString &fileName);
-    void revealAllMines(bool reveal);// новый метод
+    void revealAllMines(bool reveal);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -35,12 +37,19 @@ private:
     int mineCount;
     int flaggedMines;
     bool firstClick;
+    QTimer *timer;
+    QLabel *timerLabel;
+    QLabel *mineCounterLabel;
+    int elapsedTime;
     void placeMines(int firstX, int firstY);
     void revealCell(int x, int y);
     void revealEmptyCells(int x, int y);
     void checkForWin();
     void updateNumbers();
     void gameOver(bool won, int lastX = -1, int lastY = -1);
+    void updateMineCounter();
+    void startTimer();
+    void stopTimer();
 
 signals:
     void gameOverSignal(bool won);
@@ -51,6 +60,7 @@ private slots:
     void handleCellMiddleClick(int x, int y);
     void handleCellMiddlePress(int x, int y);
     void handleCellMiddleRelease(int x, int y);
+    void updateTimer();
 };
 
-#endif// MINESWEEPER_GAMEBOARD_H
+#endif // MINESWEEPER_GAMEBOARD_H
