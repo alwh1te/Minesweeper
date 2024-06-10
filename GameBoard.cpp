@@ -220,7 +220,7 @@ void GameBoard::handleCellMiddleClick(int x, int y) {
                     //                    } else {
                     //                        cells[nx][ny]->setStyleSheet("background-color: yellow");
                     //                    }
-                    cells[nx][ny]->setStyleSheet("background-color: yellow");
+                    cells[nx][ny]->setStyleSheet("background-color: rgb(64, 64, 64);");
                 }
             }
         }

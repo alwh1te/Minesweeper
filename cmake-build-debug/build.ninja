@@ -97,6 +97,14 @@ build CMakeFiles/Minesweeper.dir/NewGameDialog.cpp.o: CXX_COMPILER__Minesweeper_
   OBJECT_DIR = CMakeFiles/Minesweeper.dir
   OBJECT_FILE_DIR = CMakeFiles/Minesweeper.dir
 
+build CMakeFiles/Minesweeper.dir/temp.cpp.o: CXX_COMPILER__Minesweeper_unscanned_Debug /Users/alw/CLionProjects/Minesweeper/temp.cpp || cmake_object_order_depends_target_Minesweeper
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles/Minesweeper.dir/temp.cpp.o.d
+  FLAGS = -g -std=gnu++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.3 -fcolor-diagnostics -fPIC
+  INCLUDES = -isystem /Users/alw/CLionProjects/Minesweeper/cmake-build-debug/Minesweeper_autogen/include -isystem /Users/alw/Anaconda/anaconda3/include/qt -isystem /Users/alw/Anaconda/anaconda3/include/qt/QtCore -isystem /Users/alw/Anaconda/anaconda3/./mkspecs/macx-clang -isystem /Users/alw/Anaconda/anaconda3/include/qt/QtGui -isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk/System/Library/Frameworks/OpenGL.framework/Headers -isystem /Users/alw/Anaconda/anaconda3/include/qt/QtWidgets
+  OBJECT_DIR = CMakeFiles/Minesweeper.dir
+  OBJECT_FILE_DIR = CMakeFiles/Minesweeper.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Minesweeper
@@ -105,7 +113,7 @@ build CMakeFiles/Minesweeper.dir/NewGameDialog.cpp.o: CXX_COMPILER__Minesweeper_
 #############################################
 # Link the executable Minesweeper
 
-build Minesweeper: CXX_EXECUTABLE_LINKER__Minesweeper_Debug CMakeFiles/Minesweeper.dir/Minesweeper_autogen/mocs_compilation.cpp.o CMakeFiles/Minesweeper.dir/main.cpp.o CMakeFiles/Minesweeper.dir/GameCell.cpp.o CMakeFiles/Minesweeper.dir/GameBoard.cpp.o CMakeFiles/Minesweeper.dir/MainWindow.cpp.o CMakeFiles/Minesweeper.dir/NewGameDialog.cpp.o | /Users/alw/Anaconda/anaconda3/lib/libQt5Widgets.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Gui.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Core.5.15.2.dylib || Minesweeper_autogen Minesweeper_autogen_timestamp_deps
+build Minesweeper: CXX_EXECUTABLE_LINKER__Minesweeper_Debug CMakeFiles/Minesweeper.dir/Minesweeper_autogen/mocs_compilation.cpp.o CMakeFiles/Minesweeper.dir/main.cpp.o CMakeFiles/Minesweeper.dir/GameCell.cpp.o CMakeFiles/Minesweeper.dir/GameBoard.cpp.o CMakeFiles/Minesweeper.dir/MainWindow.cpp.o CMakeFiles/Minesweeper.dir/NewGameDialog.cpp.o CMakeFiles/Minesweeper.dir/temp.cpp.o | /Users/alw/Anaconda/anaconda3/lib/libQt5Widgets.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Gui.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Core.5.15.2.dylib || Minesweeper_autogen Minesweeper_autogen_timestamp_deps
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.3
   LINK_LIBRARIES = -Wl,-rpath,/Users/alw/Anaconda/anaconda3/lib  /Users/alw/Anaconda/anaconda3/lib/libQt5Widgets.5.15.2.dylib  /Users/alw/Anaconda/anaconda3/lib/libQt5Gui.5.15.2.dylib  /Users/alw/Anaconda/anaconda3/lib/libQt5Core.5.15.2.dylib
   OBJECT_DIR = CMakeFiles/Minesweeper.dir
@@ -163,7 +171,7 @@ build Minesweeper_autogen/timestamp Minesweeper_autogen/mocs_compilation.cpp | $
 #############################################
 # Phony custom command for CMakeFiles/Minesweeper_autogen_timestamp_deps
 
-build CMakeFiles/Minesweeper_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/Minesweeper_autogen_timestamp_deps: phony /Users/alw/Anaconda/anaconda3/bin/moc /Users/alw/Anaconda/anaconda3/lib/libQt5Core.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Gui.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Widgets.5.15.2.dylib /Users/alw/Anaconda/anaconda3/bin/uic
+build CMakeFiles/Minesweeper_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/Minesweeper_autogen_timestamp_deps: phony /Users/alw/Anaconda/anaconda3/lib/libQt5Core.5.15.2.dylib /Users/alw/Anaconda/anaconda3/bin/moc /Users/alw/Anaconda/anaconda3/lib/libQt5Widgets.5.15.2.dylib /Users/alw/Anaconda/anaconda3/bin/uic /Users/alw/Anaconda/anaconda3/lib/libQt5Gui.5.15.2.dylib
 
 
 #############################################
