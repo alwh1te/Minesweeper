@@ -2,7 +2,6 @@
 #define MINESWEEPER_MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QFileDialog>
 #include "GameBoard.h"
 #include "NewGameDialog.h"
 
@@ -12,6 +11,9 @@ class MainWindow : public QMainWindow {
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
 private slots:
     void newGame();
@@ -24,6 +26,7 @@ private:
     void createMenus();
     void createToolBar();
     GameBoard *gameBoard;
+    void autoLoadGame();
 };
 
 #endif // MINESWEEPER_MAINWINDOW_H
