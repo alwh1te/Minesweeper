@@ -1,15 +1,14 @@
-//
-// Created by Alexander on 09.06.2024.
-//
 #include "MainWindow.h"
-#include <QInputDialog>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QToolBar>
+#include <QAction>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), gameBoard(new GameBoard(this)) {
     setCentralWidget(gameBoard);
     createMenus();
+    createToolBar();  // Создаем тулбар
     newGame();
 }
 
@@ -24,13 +23,18 @@ void MainWindow::createMenus() {
     exitAction->setShortcuts(QKeySequence::Quit);
 }
 
+void MainWindow::createToolBar() {
+    QToolBar *toolBar = addToolBar(tr("Game"));
+    QAction *newGameAction = toolBar->addAction(tr("New Game"));
+    connect(newGameAction, &QAction::triggered, this, &MainWindow::newGame);
+}
+
 void MainWindow::newGame() {
-    bool ok;
-    int size = QInputDialog::getInt(this, tr("New Game"), tr("Enter board size:"), 10, 2, 100, 1, &ok);
-    if (ok) {
-        int mines = QInputDialog::getInt(this, tr("New Game"), tr("Enter number of mines:"), 10, 1, size*size-1, 1, &ok);
-        if (ok) {
-            gameBoard->setupBoard(size, mines);
-        }
+    NewGameDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        int width = dialog.getWidth();
+        int height = dialog.getHeight();
+        int mines = dialog.getMines();
+        gameBoard->setupBoard(width, height, mines);
     }
 }

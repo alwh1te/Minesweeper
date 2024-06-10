@@ -1,9 +1,10 @@
-#include "Gamecell.h"
+#include "GameCell.h"
 #include <QMouseEvent>
 
 GameCell::GameCell(int x, int y, QWidget *parent)
     : QPushButton(parent), posX(x), posY(y), mine(false), number(0), revealed(false), flagged(false) {
     setFixedSize(30, 30);
+    setStyleSheet("background-color: blue");
 }
 
 void GameCell::setMine(bool hasMine) {
@@ -25,14 +26,13 @@ int GameCell::getNumber() const {
 void GameCell::reveal() {
     if (revealed) return;
     revealed = true;
+    setStyleSheet("background-color: grey");
     if (mine) {
         setText("X");
         setStyleSheet("background-color: red");
     } else if (number > 0) {
         setText(QString::number(number));
-        setStyleSheet("background-color: grey");
     }
-//    setEnabled(false);
 }
 
 bool GameCell::isRevealed() const {
@@ -47,8 +47,12 @@ void GameCell::toggleFlag() {
         setStyleSheet("background-color: lightcoral");
     } else {
         setText("");
-        setStyleSheet("");
+        setStyleSheet("background-color: blue");
     }
+}
+
+bool GameCell::isFlagged() {
+    return flagged;
 }
 
 void GameCell::mousePressEvent(QMouseEvent *event) {
@@ -56,10 +60,5 @@ void GameCell::mousePressEvent(QMouseEvent *event) {
         emit cellClicked(posX, posY);
     } else if (event->button() == Qt::RightButton) {
         emit cellRightClicked(posX, posY);
-    } else if (event->button() == Qt::MiddleButton) {
-        emit cellMiddleClicked(posX, posY);
     }
-}
-bool GameCell::isFlagged() {
-    return flagged;
 }

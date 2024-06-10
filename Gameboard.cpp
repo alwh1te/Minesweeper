@@ -4,26 +4,26 @@
 #include <QMessageBox>
 #include <QRandomGenerator>
 
-GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardSize(0), mineCount(0), firstClick(true) {
+GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardWidth(0), boardHeight(0), mineCount(0), firstClick(true) {
     setMinimumSize(500, 500);
 }
 
-void GameBoard::setupBoard(int size, int mines) {
-    boardSize = size;
+void GameBoard::setupBoard(int width, int height, int mines) {
+    boardWidth = width;
+    boardHeight = height;
     mineCount = mines;
     firstClick = true;
 
     QGridLayout *layout = new QGridLayout(this);
     layout->setSpacing(1);
-    cells.resize(size);
-    for (int i = 0; i < size; ++i) {
-        cells[i].resize(size);
-        for (int j = 0; j < size; ++j) {
+    cells.resize(width);
+    for (int i = 0; i < width; ++i) {
+        cells[i].resize(height);
+        for (int j = 0; j < height; ++j) {
             cells[i][j] = new GameCell(i, j, this);
             layout->addWidget(cells[i][j], i, j);
             connect(cells[i][j], &GameCell::cellClicked, this, &GameBoard::handleCellClick);
             connect(cells[i][j], &GameCell::cellRightClicked, this, &GameBoard::handleCellRightClick);
-            connect(cells[i][j], &GameCell::cellMiddleClicked, this, &GameBoard::handleCellMiddleClick);
         }
     }
     setLayout(layout);
@@ -31,10 +31,10 @@ void GameBoard::setupBoard(int size, int mines) {
 
 void GameBoard::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
-    int cellSize = qMin(width() / boardSize, height() / boardSize);
+    int cellSize = qMin(width() / boardWidth, height() / boardHeight);
 
-    for (int i = 0; i < boardSize; ++i) {
-        for (int j = 0; j < boardSize; ++j) {
+    for (int i = 0; i < boardWidth; ++i) {
+        for (int j = 0; j < boardHeight; ++j) {
             cells[i][j]->setFixedSize(cellSize, cellSize);
         }
     }
@@ -43,8 +43,8 @@ void GameBoard::resizeEvent(QResizeEvent *event) {
 void GameBoard::placeMines(int firstX, int firstY) {
     int placedMines = 0;
     while (placedMines < mineCount) {
-        int x = QRandomGenerator::global()->bounded(boardSize);
-        int y = QRandomGenerator::global()->bounded(boardSize);
+        int x = QRandomGenerator::global()->bounded(boardWidth);
+        int y = QRandomGenerator::global()->bounded(boardHeight);
         if ((x == firstX && y == firstY) || cells[x][y]->hasMine()) {
             continue;
         }
@@ -55,15 +55,15 @@ void GameBoard::placeMines(int firstX, int firstY) {
 }
 
 void GameBoard::updateNumbers() {
-    for (int i = 0; i < boardSize; ++i) {
-        for (int j = 0; j < boardSize; ++j) {
+    for (int i = 0; i < boardWidth; ++i) {
+        for (int j = 0; j < boardHeight; ++j) {
             if (!cells[i][j]->hasMine()) {
                 int mineCount = 0;
                 for (int dx = -1; dx <= 1; ++dx) {
                     for (int dy = -1; dy <= 1; ++dy) {
                         int nx = i + dx;
                         int ny = j + dy;
-                        if (nx >= 0 && nx < boardSize && ny >= 0 && ny < boardSize && cells[nx][ny]->hasMine()) {
+                        if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && cells[nx][ny]->hasMine()) {
                             mineCount++;
                         }
                     }
@@ -75,7 +75,7 @@ void GameBoard::updateNumbers() {
 }
 
 void GameBoard::revealCell(int x, int y) {
-    if (x < 0 || x >= boardSize || y < 0 || y >= boardSize || cells[x][y]->isRevealed()) {
+    if (x < 0 || x >= boardWidth || y < 0 || y >= boardHeight || cells[x][y]->isRevealed()) {
         return;
     }
     cells[x][y]->reveal();
@@ -98,8 +98,8 @@ void GameBoard::revealEmptyCells(int x, int y) {
 void GameBoard::gameOver(bool won) {
     QString message = won ? tr("Congratulations, you won!") : tr("Game over, you lost!");
     QMessageBox::information(this, tr("Game Over"), message);
-    for (int i = 0; i < boardSize; ++i) {
-        for (int j = 0; j < boardSize; ++j) {
+    for (int i = 0; i < boardWidth; ++i) {
+        for (int j = 0; j < boardHeight; ++j) {
             cells[i][j]->reveal();
         }
     }
@@ -120,50 +120,16 @@ void GameBoard::handleCellRightClick(int x, int y) {
     cells[x][y]->toggleFlag();
 }
 
-void GameBoard::handleCellMiddleClick(int x, int y) {
-    qDebug() << "Cell middle-clicked at (" << x << ", " << y << ")";
-    if (!cells[x][y]->isRevealed()) return;
-
-    int flaggedCount = 0;
-    for (int dx = -1; dx <= 1; ++dx) {
-        for (int dy = -1; dy <= 1; ++dy) {
-            int nx = x + dx;
-            int ny = y + dy;
-            if (nx >= 0 && nx < boardSize && ny >= 0 && ny < boardSize && cells[nx][ny]->isFlagged()) {
-                flaggedCount++;
-            }
-        }
-    }
-
-    if (flaggedCount == cells[x][y]->getNumber()) {
-        for (int dx = -1; dx <= 1; ++dx) {
-            for (int dy = -1; dy <= 1; ++dy) {
-                revealEmptyCells(x + dx, y + dy);
-            }
-        }
-    } else {
-        for (int dx = -1; dx <= 1; ++dx) {
-            for (int dy = -1; dy <= 1; ++dy) {
-                int nx = x + dx;
-                int ny = y + dy;
-                if (nx >= 0 && nx < boardSize && ny >= 0 && ny < boardSize && !cells[nx][ny]->isRevealed()) {
-                    cells[nx][ny]->setStyleSheet("background-color: yellow");
-                }
-            }
-        }
-    }
-}
-
 void GameBoard::checkForWin() {
     int revealedCount = 0;
-    for (int i = 0; i < boardSize; ++i) {
-        for (int j = 0; j < boardSize; ++j) {
+    for (int i = 0; i < boardWidth; ++i) {
+        for (int j = 0; j < boardHeight; ++j) {
             if (cells[i][j]->isRevealed()) {
                 revealedCount++;
             }
         }
     }
-    if (revealedCount == (boardSize * boardSize) - mineCount) {
+    if (revealedCount == (boardWidth * boardHeight) - mineCount) {
         gameOver(true);
     }
 }

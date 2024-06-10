@@ -1,27 +1,24 @@
-//
-// Created by Alexander on 09.06.2024.
-//
-
 #ifndef MINESWEEPER_GAMEBOARD_H
 #define MINESWEEPER_GAMEBOARD_H
 
 #include <QWidget>
 #include <QVector>
-#include "Gamecell.h"
+#include "GameCell.h"
 
 class GameBoard : public QWidget {
     Q_OBJECT
 
 public:
     explicit GameBoard(QWidget *parent = nullptr);
-    void setupBoard(int size, int mines);
+    void setupBoard(int width, int height, int mines);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
     QVector<QVector<GameCell*>> cells;
-    int boardSize;
+    int boardWidth;
+    int boardHeight;
     int mineCount;
     bool firstClick;
     void placeMines(int firstX, int firstY);
@@ -34,7 +31,6 @@ private:
 private slots:
     void handleCellClick(int x, int y);
     void handleCellRightClick(int x, int y);
-    void handleCellMiddleClick(int x, int y);
 };
 
-#endif//MINESWEEPER_GAMEBOARD_H
+#endif // MINESWEEPER_GAMEBOARD_H

@@ -1,7 +1,3 @@
-//
-// Created by Alexander on 09.06.2024.
-//
-
 #ifndef MINESWEEPER_GAMECELL_H
 #define MINESWEEPER_GAMECELL_H
 
@@ -24,7 +20,6 @@ public:
 signals:
     void cellClicked(int x, int y);
     void cellRightClicked(int x, int y);
-    void cellMiddleClicked(int x, int y);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -37,4 +32,4 @@ private:
     bool flagged;
 };
 
-#endif//MINESWEEPER_GAMECELL_H
+#endif // MINESWEEPER_GAMECELL_H

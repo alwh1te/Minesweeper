@@ -20,6 +20,8 @@ add_executable(Minesweeper main.cpp
         Gamecell.cpp
         Gameboard.cpp
         MainWindow.cpp
+        NewGameDialog.cpp
+        NewGameDialog.h
 )
 target_link_libraries(Minesweeper
         Qt5::Core
