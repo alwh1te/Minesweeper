@@ -168,4 +168,7 @@ void GameBoard::checkForWin() {
             }
         }
     }
+    if (revealedCount == (boardWidth * boardHeight) - mineCount) {
+        gameOver(true);
+    }
 }
