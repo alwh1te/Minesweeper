@@ -2,7 +2,7 @@
 
 
 MainWindow::MainWindow(bool debug, QWidget *parent)
-    : QMainWindow(parent), gameBoard(nullptr), saveFileName(QDir::homePath() + "/minesweeper_save.ini") {
+    : QMainWindow(parent), gameBoard(nullptr), saveFileName(QDir::currentPath() + "/autosave.ini") {
     debugMode = debug;
     createMenus();
     createToolBar();
@@ -12,13 +12,14 @@ MainWindow::MainWindow(bool debug, QWidget *parent)
         setCentralWidget(gameBoard);
         gameBoard->loadGameState(saveFileName);
         connect(gameBoard, &GameBoard::gameOverSignal, this, &MainWindow::gameFinished);
+        file.remove();
     } else {
         newGame();
     }
 }
 
 MainWindow::~MainWindow() {
-    if (gameBoard) {
+    if (gameBoard && !gameOver) {
         gameBoard->saveGameState(saveFileName);
     }
     delete gameBoard;
@@ -50,13 +51,14 @@ void MainWindow::createToolBar() {
 
 void MainWindow::toggleDebugMode(bool checked) {
     if (gameBoard) {
-        gameBoard->revealAllMines(checked); // вызываем метод для показа или скрытия всех мин
+        gameBoard->revealAllMines(checked);
     }
 }
 
 void MainWindow::newGame() {
     NewGameDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
+        gameOver = false;
         int width = dialog.getWidth();
         int height = dialog.getHeight();
         int mines = dialog.getMines();
@@ -67,7 +69,7 @@ void MainWindow::newGame() {
 
         gameBoard = new GameBoard(this);
         setCentralWidget(gameBoard);
-        gameBoard->setupBoard(width, height, mines);
+        gameBoard->setupBoard(width, height, mines, 0, 0);
 
         connect(gameBoard, &GameBoard::gameOverSignal, this, &MainWindow::gameFinished);
     }
@@ -76,4 +78,5 @@ void MainWindow::newGame() {
 void MainWindow::gameFinished(bool won) {
     QString message = won ? tr("Congratulations, you won!") : tr("Game over, you lost!");
     QMessageBox::information(this, tr("Game Over"), message);
+    gameOver = true;
 }

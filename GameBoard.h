@@ -22,7 +22,7 @@ class GameBoard : public QWidget {
 public:
     explicit GameBoard(QWidget *parent = nullptr);
     ~GameBoard();
-    void setupBoard(int width, int height, int mines);
+    void setupBoard(int width, int height, int mines, int time, int flMines);
     void saveGameState(const QString &fileName);
     void loadGameState(const QString &fileName);
     void revealAllMines(bool reveal);

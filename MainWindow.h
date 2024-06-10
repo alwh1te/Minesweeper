@@ -28,6 +28,7 @@ private:
     void createMenus();
     void createToolBar();
     bool debugMode;
+    bool gameOver;
     GameBoard *gameBoard;
     QString saveFileName;
     QAction *debugAction;
