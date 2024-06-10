@@ -37,6 +37,10 @@ private:
     bool flagged;
     QIcon mineIcon;
     QIcon flagIcon;
+    QIcon emptyIcon;
+    QIcon cellIcon; // Добавляем иконку не нажатой ячейки
+    void paintEvent(QPaintEvent *event);
+    QColor getColorForNumber(int number);
 };
 
 #endif // MINESWEEPER_GAMECELL_H

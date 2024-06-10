@@ -1,14 +1,46 @@
 #include "GameCell.h"
 #include <QFont>
+#include <QPainter>
+#include <QStyleOptionButton>
 
 GameCell::GameCell(int x, int y, QWidget *parent)
     : QPushButton(parent), posX(x), posY(y), mine(false), number(0), revealed(false), flagged(false) {
     setFixedSize(30, 30);
-//    setStyleSheet("background-color: blue");
-    mineIcon = QIcon(":/icons/mine.png");
+    setStyleSheet("background-color: rgb(189, 189, 189);");
+    mineIcon = QIcon(":/icons/bomb.png");
     flagIcon = QIcon(":/icons/flag.png");
-    setIconSize(QSize(30, 30));
-    setFont(QFont("Arial", 14, QFont::Bold));
+    emptyIcon = QIcon(":/icons/empty.png");
+    cellIcon = QIcon(":/icons/cell.png");
+    setIcon(cellIcon);
+    setIconSize(QSize(24, 24));
+    QFont monoFont("Courier New", 18, QFont::Bold);
+    setFont(monoFont);
+    setText("");
+//    setStyleSheet("padding: 5px;");
+//    setContentsMargins(3, 3, 3, 3);
+}
+
+void GameCell::paintEvent(QPaintEvent *event) {
+    QPainter painter(this);
+    QStyleOptionButton option;
+    option.initFrom(this);
+    style()->drawControl(QStyle::CE_PushButton, &option, &painter, this);
+
+    int iconPadding = 3;
+
+    QRect iconRect = QRect(iconPadding, iconPadding, width() - 2 * iconPadding, height() - 2 * iconPadding);
+    QRect textRect = QRect(iconPadding, iconPadding, width() - 2 * iconPadding, height() - 2 * iconPadding);
+
+    if (!icon().isNull()) {
+        icon().paint(&painter, iconRect);
+    }
+
+    if (!text().isEmpty()) {
+        QFont font = this->font();
+        painter.setFont(font);
+        painter.setPen(getColorForNumber(number));
+        painter.drawText(textRect, Qt::AlignCenter, text());
+    }
 }
 
 void GameCell::setMine(bool hasMine) {
@@ -30,12 +62,15 @@ int GameCell::getNumber() const {
 void GameCell::reveal() {
     if (revealed) return;
     revealed = true;
-    setStyleSheet("background-color: grey");
     if (mine) {
         setIcon(mineIcon);
     } else if (number > 0) {
+        setIcon(emptyIcon);
         setText(QString::number(number));
+    } else {
+        setIcon(emptyIcon);
     }
+    update();
 }
 
 bool GameCell::isRevealed() const {
@@ -48,9 +83,9 @@ void GameCell::toggleFlag() {
     if (flagged) {
         setIcon(flagIcon);
     } else {
-        setIcon(QIcon());
-        setText("");
+        setIcon(cellIcon);
     }
+    update();
 }
 
 bool GameCell::isFlagged() const {
@@ -64,5 +99,19 @@ void GameCell::mousePressEvent(QMouseEvent *event) {
         emit cellRightClicked(posX, posY);
     } else if (event->button() == Qt::MiddleButton) {
         emit cellMiddleClicked(posX, posY);
+    }
+}
+
+QColor GameCell::getColorForNumber(int number) {
+    switch (number) {
+        case 1: return QColor(Qt::darkBlue);
+        case 2: return QColor(Qt::darkGreen);
+        case 3: return QColor(Qt::darkRed);
+        case 4: return QColor(Qt::blue);
+        case 5: return QColor(Qt::red);
+        case 6: return QColor(Qt::cyan);
+        case 7: return QColor(Qt::black);
+        case 8: return QColor(Qt::gray);
+        default: return QColor(Qt::black);
     }
 }

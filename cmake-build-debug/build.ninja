@@ -171,7 +171,7 @@ build Minesweeper_autogen/timestamp Minesweeper_autogen/mocs_compilation.cpp | $
 #############################################
 # Custom command for Minesweeper_autogen/EWIEGA46WW/qrc_resources.cpp
 
-build Minesweeper_autogen/EWIEGA46WW/qrc_resources.cpp | ${cmake_ninja_workdir}Minesweeper_autogen/EWIEGA46WW/qrc_resources.cpp: CUSTOM_COMMAND /Users/alw/CLionProjects/Minesweeper/resources.qrc CMakeFiles/Minesweeper_autogen.dir/AutoRcc_resources_EWIEGA46WW_Info.json /Users/alw/CLionProjects/Minesweeper/icons/bomb.png /Users/alw/CLionProjects/Minesweeper/icons/cell.png /Users/alw/CLionProjects/Minesweeper/icons/flag.png /Users/alw/Anaconda/anaconda3/bin/rcc || Minesweeper_autogen Minesweeper_autogen_timestamp_deps
+build Minesweeper_autogen/EWIEGA46WW/qrc_resources.cpp | ${cmake_ninja_workdir}Minesweeper_autogen/EWIEGA46WW/qrc_resources.cpp: CUSTOM_COMMAND /Users/alw/CLionProjects/Minesweeper/resources.qrc CMakeFiles/Minesweeper_autogen.dir/AutoRcc_resources_EWIEGA46WW_Info.json /Users/alw/CLionProjects/Minesweeper/icons/bomb.png /Users/alw/CLionProjects/Minesweeper/icons/cell.png /Users/alw/CLionProjects/Minesweeper/icons/empty.png /Users/alw/CLionProjects/Minesweeper/icons/flag.png /Users/alw/Anaconda/anaconda3/bin/rcc || Minesweeper_autogen Minesweeper_autogen_timestamp_deps
   COMMAND = cd /Users/alw/CLionProjects/Minesweeper/cmake-build-debug && /Users/alw/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E cmake_autorcc /Users/alw/CLionProjects/Minesweeper/cmake-build-debug/CMakeFiles/Minesweeper_autogen.dir/AutoRcc_resources_EWIEGA46WW_Info.json Debug
   DESC = Automatic RCC for resources.qrc
   restat = 1
@@ -180,7 +180,7 @@ build Minesweeper_autogen/EWIEGA46WW/qrc_resources.cpp | ${cmake_ninja_workdir}M
 #############################################
 # Phony custom command for CMakeFiles/Minesweeper_autogen_timestamp_deps
 
-build CMakeFiles/Minesweeper_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/Minesweeper_autogen_timestamp_deps: phony /Users/alw/Anaconda/anaconda3/lib/libQt5Gui.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Core.5.15.2.dylib /Users/alw/Anaconda/anaconda3/bin/moc /Users/alw/Anaconda/anaconda3/lib/libQt5Widgets.5.15.2.dylib /Users/alw/Anaconda/anaconda3/bin/uic
+build CMakeFiles/Minesweeper_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/Minesweeper_autogen_timestamp_deps: phony /Users/alw/Anaconda/anaconda3/lib/libQt5Gui.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Core.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Widgets.5.15.2.dylib /Users/alw/Anaconda/anaconda3/bin/uic /Users/alw/Anaconda/anaconda3/bin/moc
 
 
 #############################################
