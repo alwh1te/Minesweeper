@@ -81,7 +81,7 @@ void GameBoard::resizeEvent(QResizeEvent *event) {
     for (int i = 0; i < boardWidth; ++i) {
         for (int j = 0; j < boardHeight; ++j) {
             cells[i][j]->setFixedSize(cellSize, cellSize);
-            cells[i][j]->setIconSize(QSize(cellSize, cellSize)); // Обновление размера иконок
+            cells[i][j]->setIconSize(QSize(cellSize, cellSize));
         }
     }
 }
@@ -141,22 +141,27 @@ void GameBoard::revealEmptyCells(int x, int y) {
     }
 }
 
-void GameBoard::revealAllMines() {
+void GameBoard::revealAllMines(bool reveal) {
     for (int i = 0; i < boardWidth; ++i) {
         for (int j = 0; j < boardHeight; ++j) {
-            if (!cells[i][j]->isRevealed()) {
-                cells[i][j]->reveal();
+            if (cells[i][j]->hasMine()) {
+                if (reveal) {
+                    cells[i][j]->setIcon(QIcon(":/icons/bomb.png"));
+                } else if (!cells[i][j]->isRevealed()) {
+                    cells[i][j]->setIcon(QIcon(":/icons/cell.png"));
+                }
             }
         }
     }
 }
+
 
 void GameBoard::gameOver(bool won, int lastX, int lastY) {
     if (lastX != -1 && lastY != -1) {
         cells[lastX][lastY]->setStyleSheet("background-color: lightcoral");
     }
     if (!won) {
-        revealAllMines();
+        revealAllMines(false);
     }
     setDisabled(true);
     emit gameOverSignal(won);
@@ -215,11 +220,6 @@ void GameBoard::handleCellMiddleClick(int x, int y) {
                 int nx = x + dx;
                 int ny = y + dy;
                 if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && !cells[nx][ny]->isRevealed() && !cells[nx][ny]->isFlagged()) {
-                    //                    if (cells[nx][ny]->styleSheet() == "background-color: yellow") {
-                    //                        cells[nx][ny]->setStyleSheet("background-color: yellow");
-                    //                    } else {
-                    //                        cells[nx][ny]->setStyleSheet("background-color: yellow");
-                    //                    }
                     cells[nx][ny]->setStyleSheet("background-color: rgb(64, 64, 64);");
                 }
             }

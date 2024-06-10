@@ -1,17 +1,18 @@
 #pragma once
 
 #ifndef MINESWEEPER_GAMEBOARD_H
-#define MINESWEEPER_GAMEBOARD_H
+#define MININESWEEPER_GAMEBOARD_H
 
-#include <QWidget>
-#include <QVector>
+#include "GameCell.h"
+#include <QCheckBox>
 #include <QDebug>
 #include <QFile>
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QRandomGenerator>
 #include <QTextStream>
-#include "GameCell.h"
+#include <QVector>
+#include <QWidget>
 
 class GameBoard : public QWidget {
     Q_OBJECT
@@ -20,15 +21,15 @@ public:
     explicit GameBoard(QWidget *parent = nullptr);
     ~GameBoard();
     void setupBoard(int width, int height, int mines);
-
     void saveGameState(const QString &fileName);
     void loadGameState(const QString &fileName);
+    void revealAllMines(bool reveal);// новый метод
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
-    QVector<QVector<GameCell*>> cells;
+    QVector<QVector<GameCell *>> cells;
     int boardWidth;
     int boardHeight;
     int mineCount;
@@ -39,7 +40,6 @@ private:
     void revealEmptyCells(int x, int y);
     void checkForWin();
     void updateNumbers();
-    void revealAllMines();
     void gameOver(bool won, int lastX = -1, int lastY = -1);
 
 signals:
@@ -51,4 +51,4 @@ private slots:
     void handleCellMiddleClick(int x, int y);
 };
 
-#endif // MINESWEEPER_GAMEBOARD_H
+#endif// MINESWEEPER_GAMEBOARD_H
