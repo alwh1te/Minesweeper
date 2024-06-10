@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent)
     createMenus();
     createToolBar();
 
-    // Попробуйте загрузить сохраненную игру, если файл существует
     QFile file(saveFileName);
     if (file.exists()) {
         gameBoard = new GameBoard(this);
@@ -18,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
         gameBoard->loadGameState(saveFileName);
         connect(gameBoard, &GameBoard::gameOverSignal, this, &MainWindow::gameFinished);
     } else {
-        newGame(); // Если файл не существует, начните новую игру
+        newGame();
     }
 }
 
@@ -64,5 +63,4 @@ void MainWindow::newGame() {
 void MainWindow::gameFinished(bool won) {
     QString message = won ? tr("Congratulations, you won!") : tr("Game over, you lost!");
     QMessageBox::information(this, tr("Game Over"), message);
-    // newGame();
 }

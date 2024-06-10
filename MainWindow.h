@@ -20,7 +20,7 @@ private:
     void createMenus();
     void createToolBar();
     GameBoard *gameBoard;
-    QString saveFileName; // Добавлено для хранения имени файла сохранения
+    QString saveFileName;
 };
 
 #endif // MINESWEEPER_MAINWINDOW_H

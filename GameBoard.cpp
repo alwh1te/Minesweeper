@@ -15,7 +15,6 @@ GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardWidth(0), boardHei
 GameBoard::~GameBoard() {
     for (int i = 0; i < boardWidth; ++i) {
         for (int j = 0; j < boardHeight; ++j) {
-//            if (cells[i][j])
             delete cells[i][j];
         }
     }

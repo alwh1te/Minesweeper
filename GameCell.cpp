@@ -33,7 +33,6 @@ void GameCell::reveal() {
     } else if (number > 0) {
         setText(QString::number(number));
     }
-//    setEnabled(false);
 }
 
 bool GameCell::isRevealed() const {
