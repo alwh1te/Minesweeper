@@ -8,18 +8,18 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), gameBoard(new GameBoard(this)) {
     setCentralWidget(gameBoard);
     createMenus();
-    createToolBar();  // Создаем тулбар
+    createToolBar();
     newGame();
 }
 
 MainWindow::~MainWindow() {}
 
 void MainWindow::createMenus() {
-    QMenu *gameMenu = menuBar()->addMenu(tr("&Game"));
-    QAction *newGameAction = gameMenu->addAction(tr("&New Game"), this, &MainWindow::newGame, QKeySequence::New);
+    QMenu *gameMenu = menuBar()->addMenu(tr("Game"));
+    QAction *newGameAction = gameMenu->addAction(tr("New Game"), this, &MainWindow::newGame, QKeySequence::New);
     newGameAction->setShortcuts(QKeySequence::New);
     gameMenu->addSeparator();
-    QAction *exitAction = gameMenu->addAction(tr("E&xit"), this, &QWidget::close);
+    QAction *exitAction = gameMenu->addAction(tr("Exit"), this, &QWidget::close);
     exitAction->setShortcuts(QKeySequence::Quit);
 }
 
