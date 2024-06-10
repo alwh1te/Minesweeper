@@ -10,6 +10,7 @@ class GameBoard : public QWidget {
 
 public:
     explicit GameBoard(QWidget *parent = nullptr);
+    ~GameBoard();  // Добавим деструктор для освобождения ресурсов
     void setupBoard(int width, int height, int mines);
 
 protected:
@@ -28,7 +29,6 @@ private:
     void checkForWin();
     void updateNumbers();
     void revealAllMines();
-
     void gameOver(bool won);
 
 signals:

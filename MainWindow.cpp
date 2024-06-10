@@ -1,34 +1,33 @@
 #include "MainWindow.h"
-#include <QMenuBar>
-#include <QToolBar>
 #include <QAction>
+#include <QMenuBar>
 #include <QMessageBox>
+#include <QToolBar>
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), gameBoard(nullptr) {
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent), gameBoard(nullptr) {
     createMenus();
     createToolBar();
-
-    gameBoard = new GameBoard(this);
-    setCentralWidget(gameBoard);
-
     newGame();
 }
 
 MainWindow::~MainWindow() {
+    delete gameBoard;
 }
 
 void MainWindow::createMenus() {
-    gameMenu = menuBar()->addMenu(tr("&Game"));
-
-    newGameAction = new QAction(tr("&New Game"), this);
+    QMenu *gameMenu = menuBar()->addMenu(tr("Game"));
+    QAction *newGameAction = gameMenu->addAction(tr("New Game"));
     connect(newGameAction, &QAction::triggered, this, &MainWindow::newGame);
-    gameMenu->addAction(newGameAction);
 }
 
 void MainWindow::createToolBar() {
-    QToolBar *toolBar = addToolBar(tr("Game Controls"));
+    QToolBar *toolBar = addToolBar(tr("Game"));
+    QAction *newGameAction = new QAction(tr("New Game"), this);
     toolBar->addAction(newGameAction);
+    connect(newGameAction, &QAction::triggered, this, &MainWindow::newGame);
 }
+
 
 void MainWindow::newGame() {
     NewGameDialog dialog(this);
@@ -38,7 +37,6 @@ void MainWindow::newGame() {
         int mines = dialog.getMines();
 
         if (gameBoard) {
-            centralWidget()->setParent(nullptr);
             delete gameBoard;
         }
 
@@ -46,13 +44,14 @@ void MainWindow::newGame() {
         setCentralWidget(gameBoard);
         gameBoard->setupBoard(width, height, mines);
 
-        // Подключаем слот завершения игры к игровому полю
         connect(gameBoard, &GameBoard::gameOverSignal, this, &MainWindow::gameFinished);
     }
 }
 
+
 void MainWindow::gameFinished(bool won) {
     QString message = won ? tr("Congratulations, you won!") : tr("Game over, you lost!");
     QMessageBox::information(this, tr("Game Over"), message);
-    newGame();
 }
+
+

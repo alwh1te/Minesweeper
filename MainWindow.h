@@ -14,14 +14,12 @@ public:
 
 private slots:
     void newGame();
-    void gameFinished(bool won);  // Новый слот для обработки окончания игры
+    void gameFinished(bool won);  // Новый слот для обработки завершения игры
 
 private:
     void createMenus();
     void createToolBar();
     GameBoard *gameBoard;
-    QMenu *gameMenu;
-    QAction *newGameAction;
 };
 
 #endif // MINESWEEPER_MAINWINDOW_H

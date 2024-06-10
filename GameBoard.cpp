@@ -8,6 +8,14 @@ GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardWidth(0), boardHei
     setMinimumSize(500, 500);
 }
 
+GameBoard::~GameBoard() {
+    for (int i = 0; i < boardWidth; ++i) {
+        for (int j = 0; j < boardHeight; ++j) {
+            delete cells[i][j];
+        }
+    }
+}
+
 void GameBoard::setupBoard(int width, int height, int mines) {
     boardWidth = width;
     boardHeight = height;
@@ -99,7 +107,7 @@ void GameBoard::revealEmptyCells(int x, int y) {
 void GameBoard::revealAllMines() {
     for (int i = 0; i < boardWidth; ++i) {
         for (int j = 0; j < boardHeight; ++j) {
-            if (cells[i][j]->hasMine() && !cells[i][j]->isRevealed()) {
+            if (!cells[i][j]->isRevealed()) {
                 cells[i][j]->reveal();
             }
         }
@@ -111,7 +119,7 @@ void GameBoard::gameOver(bool won) {
         revealAllMines();
     }
     setDisabled(true);
-    emit gameOverSignal(won);  // Извещение об окончании игры
+    emit gameOverSignal(won);
 }
 
 void GameBoard::handleCellClick(int x, int y) {
@@ -135,7 +143,20 @@ void GameBoard::handleCellRightClick(int x, int y) {
     } else {
         flaggedMines--;
     }
-    checkForWin();
+
+    if (flaggedMines == mineCount) {
+        int correctlyFlaggedMines = 0;
+        for (int i = 0; i < boardWidth; ++i) {
+            for (int j = 0; j < boardHeight; ++j) {
+                if (cells[i][j]->hasMine() && cells[i][j]->isFlagged()) {
+                    correctlyFlaggedMines++;
+                }
+            }
+        }
+        if (correctlyFlaggedMines == mineCount) {
+            gameOver(true);
+        }
+    }
 }
 
 void GameBoard::checkForWin() {
@@ -146,8 +167,5 @@ void GameBoard::checkForWin() {
                 revealedCount++;
             }
         }
-    }
-    if (revealedCount == (boardWidth * boardHeight) - mineCount && flaggedMines == mineCount) {
-        gameOver(true);
     }
 }
