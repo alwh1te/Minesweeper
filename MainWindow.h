@@ -14,7 +14,7 @@ public:
 
 private slots:
     void newGame();
-    void gameFinished(bool won);  // Новый слот для обработки завершения игры
+    void gameFinished(bool won);
 
 private:
     void createMenus();

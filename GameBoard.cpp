@@ -33,6 +33,7 @@ void GameBoard::setupBoard(int width, int height, int mines) {
             layout->addWidget(cells[i][j], i, j);
             connect(cells[i][j], &GameCell::cellClicked, this, &GameBoard::handleCellClick);
             connect(cells[i][j], &GameCell::cellRightClicked, this, &GameBoard::handleCellRightClick);
+            connect(cells[i][j], &GameCell::cellMiddleClicked, this, &GameBoard::handleCellMiddleClick);
         }
     }
     setLayout(layout);
@@ -155,6 +156,60 @@ void GameBoard::handleCellRightClick(int x, int y) {
         }
         if (correctlyFlaggedMines == mineCount) {
             gameOver(true);
+        }
+    }
+}
+
+
+void GameBoard::handleCellMiddleClick(int x, int y) {
+    qDebug() << "Cell middle-clicked at (" << x << ", " << y << ")";
+    if (!cells[x][y]->isRevealed()) return;
+
+    int flaggedCount = 0;
+    for (int dx = -1; dx <= 1; ++dx) {
+        for (int dy = -1; dy <= 1; ++dy) {
+            int nx = x + dx;
+            int ny = y + dy;
+            if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && cells[nx][ny]->isFlagged()) {
+                flaggedCount++;
+            }
+        }
+    }
+    int correctlyFlaggedMines = 0;
+    for (int dx = -1; dx <= 1; ++dx) {
+        for (int dy = -1; dy <= 1; ++dy) {
+            int nx = x + dx;
+            int ny = y + dy;
+            if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && cells[nx][ny]->hasMine() && cells[nx][ny]->isFlagged()) {
+                correctlyFlaggedMines++;
+            }
+        }
+    }
+    qDebug() << flaggedCount;
+    qDebug() << correctlyFlaggedMines;
+    if (flaggedCount == correctlyFlaggedMines && flaggedCount == cells[x][y]->getNumber()) {
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dy = -1; dy <= 1; ++dy) {
+                int nx = x + dx;
+                int ny = y + dy;
+                if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && !cells[x + dx][y + dy]->hasMine())
+                    revealCell(x + dx, y + dy);
+            }
+        }
+    } else {
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dy = -1; dy <= 1; ++dy) {
+                int nx = x + dx;
+                int ny = y + dy;
+                if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && !cells[nx][ny]->isRevealed() && !cells[nx][ny]->isFlagged()) {
+//                    if (cells[nx][ny]->styleSheet() == "background-color: yellow") {
+//                        cells[nx][ny]->setStyleSheet("background-color: yellow");
+//                    } else {
+//                        cells[nx][ny]->setStyleSheet("background-color: yellow");
+//                    }
+                    cells[nx][ny]->setStyleSheet("background-color: yellow");
+                }
+            }
         }
     }
 }

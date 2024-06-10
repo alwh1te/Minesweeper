@@ -33,7 +33,7 @@ void GameCell::reveal() {
     } else if (number > 0) {
         setText(QString::number(number));
     }
-    setEnabled(false);
+//    setEnabled(false);
 }
 
 bool GameCell::isRevealed() const {
@@ -61,5 +61,7 @@ void GameCell::mousePressEvent(QMouseEvent *event) {
         emit cellClicked(posX, posY);
     } else if (event->button() == Qt::RightButton) {
         emit cellRightClicked(posX, posY);
+    } else if (event->button() == Qt::MiddleButton) {
+        emit cellMiddleClicked(posX, posY);
     }
 }
