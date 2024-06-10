@@ -1,7 +1,14 @@
+#pragma once
+
 #ifndef MINESWEEPER_MAINWINDOW_H
 #define MINESWEEPER_MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QAction>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QToolBar>
+#include <QDir>
 #include "GameBoard.h"
 #include "NewGameDialog.h"
 

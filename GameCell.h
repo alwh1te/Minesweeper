@@ -1,6 +1,9 @@
+#pragma once
+
 #ifndef MINESWEEPER_GAMECELL_H
 #define MINESWEEPER_GAMECELL_H
 
+#include <QMouseEvent>
 #include <QPushButton>
 
 class GameCell : public QPushButton {

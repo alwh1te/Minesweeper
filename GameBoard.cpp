@@ -1,11 +1,4 @@
 #include "GameBoard.h"
-#include <QDebug>
-#include <QFile>
-#include <QGridLayout>
-#include <QMessageBox>
-#include <QRandomGenerator>
-#include <QSettings>
-#include <QTextStream>
 
 
 GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardWidth(0), boardHeight(0), mineCount(0), flaggedMines(0), firstClick(true) {
@@ -90,6 +83,7 @@ void GameBoard::resizeEvent(QResizeEvent *event) {
             cells[i][j]->setFixedSize(cellSize, cellSize);
         }
     }
+    // TODO fix windows scaling
 }
 
 void GameBoard::placeMines(int firstX, int firstY) {

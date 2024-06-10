@@ -1,5 +1,4 @@
 #include "GameCell.h"
-#include <QMouseEvent>
 
 GameCell::GameCell(int x, int y, QWidget *parent)
     : QPushButton(parent), posX(x), posY(y), mine(false), number(0), revealed(false), flagged(false) {

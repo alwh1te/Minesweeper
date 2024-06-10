@@ -1,8 +1,16 @@
+#pragma once
+
 #ifndef MINESWEEPER_GAMEBOARD_H
 #define MINESWEEPER_GAMEBOARD_H
 
 #include <QWidget>
 #include <QVector>
+#include <QDebug>
+#include <QFile>
+#include <QGridLayout>
+#include <QMessageBox>
+#include <QRandomGenerator>
+#include <QTextStream>
 #include "GameCell.h"
 
 class GameBoard : public QWidget {

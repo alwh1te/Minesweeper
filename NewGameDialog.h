@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef MINESWEEPER_NEWGAMEDIALOG_H
 #define MINESWEEPER_NEWGAMEDIALOG_H
 

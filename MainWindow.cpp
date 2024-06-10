@@ -1,9 +1,4 @@
 #include "MainWindow.h"
-#include <QAction>
-#include <QMenuBar>
-#include <QMessageBox>
-#include <QToolBar>
-#include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), gameBoard(nullptr), saveFileName(QDir::homePath() + "/minesweeper_save.ini") {
