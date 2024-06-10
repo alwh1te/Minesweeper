@@ -19,6 +19,7 @@ public:
     void reveal();
     bool isRevealed() const;
     void toggleFlag();
+    bool isFlagged();
 
 signals:
     void cellClicked(int x, int y);

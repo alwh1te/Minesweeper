@@ -32,7 +32,7 @@ void GameCell::reveal() {
         setText(QString::number(number));
         setStyleSheet("background-color: grey");
     }
-    setEnabled(false);
+//    setEnabled(false);
 }
 
 bool GameCell::isRevealed() const {
@@ -59,4 +59,7 @@ void GameCell::mousePressEvent(QMouseEvent *event) {
     } else if (event->button() == Qt::MiddleButton) {
         emit cellMiddleClicked(posX, posY);
     }
+}
+bool GameCell::isFlagged() {
+    return flagged;
 }

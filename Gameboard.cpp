@@ -5,7 +5,7 @@
 #include <QRandomGenerator>
 
 GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardSize(0), mineCount(0), firstClick(true) {
-    setMinimumSize(500, 500);// Устанавливаем минимальный размер для игрового поля
+    setMinimumSize(500, 500);
 }
 
 void GameBoard::setupBoard(int size, int mines) {
@@ -14,7 +14,7 @@ void GameBoard::setupBoard(int size, int mines) {
     firstClick = true;
 
     QGridLayout *layout = new QGridLayout(this);
-    layout->setSpacing(1);// Устанавливаем расстояние между ячейками
+    layout->setSpacing(1);
     cells.resize(size);
     for (int i = 0; i < size; ++i) {
         cells[i].resize(size);
@@ -84,7 +84,7 @@ void GameBoard::revealCell(int x, int y) {
     } else if (cells[x][y]->getNumber() == 0) {
         revealEmptyCells(x, y);
     }
-    checkForWin();// Проверка победы после каждого открытия ячейки
+    checkForWin();
 }
 
 void GameBoard::revealEmptyCells(int x, int y) {
@@ -103,7 +103,7 @@ void GameBoard::gameOver(bool won) {
             cells[i][j]->reveal();
         }
     }
-    setDisabled(true);// Отключаем игровое поле после окончания игры
+    setDisabled(true);
 }
 
 void GameBoard::handleCellClick(int x, int y) {
@@ -129,7 +129,7 @@ void GameBoard::handleCellMiddleClick(int x, int y) {
         for (int dy = -1; dy <= 1; ++dy) {
             int nx = x + dx;
             int ny = y + dy;
-            if (nx >= 0 && nx < boardSize && ny >= 0 && ny < boardSize && cells[nx][ny]->text() == "F") {
+            if (nx >= 0 && nx < boardSize && ny >= 0 && ny < boardSize && cells[nx][ny]->isFlagged()) {
                 flaggedCount++;
             }
         }
@@ -138,7 +138,7 @@ void GameBoard::handleCellMiddleClick(int x, int y) {
     if (flaggedCount == cells[x][y]->getNumber()) {
         for (int dx = -1; dx <= 1; ++dx) {
             for (int dy = -1; dy <= 1; ++dy) {
-                revealCell(x + dx, y + dy);
+                revealEmptyCells(x + dx, y + dy);
             }
         }
     } else {
