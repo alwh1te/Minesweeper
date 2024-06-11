@@ -1,9 +1,4 @@
 #include "NewGameDialog.h"
-#include <QFormLayout>
-#include <QLineEdit>
-#include <QIntValidator>
-#include <QDialogButtonBox>
-#include <QMessageBox>
 
 NewGameDialog::NewGameDialog(QWidget *parent) : QDialog(parent), width(10), height(10), mines(10) {
     QFormLayout *layout = new QFormLayout(this);

@@ -4,6 +4,11 @@
 #define MINESWEEPER_NEWGAMEDIALOG_H
 
 #include <QDialog>
+#include <QFormLayout>
+#include <QLineEdit>
+#include <QIntValidator>
+#include <QDialogButtonBox>
+#include <QMessageBox>
 
 class QLineEdit;
 

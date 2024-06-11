@@ -6,6 +6,9 @@
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QIcon>
+#include <QFont>
+#include <QPainter>
+#include <QStyleOptionButton>
 
 class GameCell : public QPushButton {
     Q_OBJECT
@@ -30,7 +33,6 @@ signals:
     void middleButtonReleased(int x, int y);
     void cellClicked(int x, int y);
     void cellRightClicked(int x, int y);
-    void cellMiddleClicked(int x, int y);
 
 private:
     int posX, posY;

@@ -1,7 +1,7 @@
 #include "GameBoard.h"
 
-
-GameBoard::GameBoard(QWidget *parent) : QWidget(parent), boardWidth(0), boardHeight(0), mineCount(0), flaggedMines(0), firstClick(true), elapsedTime(0) {
+GameBoard::GameBoard(QWidget *parent)
+    : QWidget(parent), boardWidth(0), boardHeight(0), mineCount(0), flaggedMines(0), firstClick(true), elapsedTime(0) {
     setMinimumSize(500, 500);
     timer = new QTimer(this);
     timerLabel = new QLabel(this);
@@ -20,47 +20,64 @@ GameBoard::~GameBoard() {
 }
 
 void GameBoard::saveGameState(const QString &fileName) {
-    QFile file(fileName);
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QTextStream out(&file);
-        out << boardWidth << " " << boardHeight << " " << mineCount << " " << (firstClick ? 1 : 0) << " " << elapsedTime << " " << flaggedMines << "\n";
-        for (int i = 0; i < boardWidth; ++i) {
-            for (int j = 0; j < boardHeight; ++j) {
-                out << (cells[i][j]->hasMine() ? 1 : 0) << " "
-                    << cells[i][j]->getNumber() << " "
-                    << (cells[i][j]->isRevealed() ? 1 : 0) << " "
-                    << (cells[i][j]->isFlagged() ? 1 : 0) << "\n";
-            }
+    QSettings settings(fileName, QSettings::IniFormat);
+
+    settings.beginGroup("GameState");
+    settings.setValue("Width", boardWidth);
+    settings.setValue("Height", boardHeight);
+    settings.setValue("MineCount", mineCount);
+    settings.setValue("FlaggedMines", flaggedMines);
+    settings.setValue("ElapsedTime", elapsedTime);
+    settings.endGroup();
+
+    settings.beginGroup("Cells");
+    for (int x = 0; x < boardWidth; ++x) {
+        for (int y = 0; y < boardHeight; ++y) {
+            QString key = QString("Cell_%1_%2").arg(x).arg(y);
+            settings.setValue(key + "_Mine", cells[x][y]->hasMine());
+            settings.setValue(key + "_Number", cells[x][y]->getNumber());
+            settings.setValue(key + "_Revealed", cells[x][y]->isRevealed());
+            settings.setValue(key + "_Flagged", cells[x][y]->isFlagged());
         }
-        file.close();
     }
+    settings.endGroup();
 }
 
 void GameBoard::loadGameState(const QString &fileName) {
-    QFile file(fileName);
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream in(&file);
-        int firstClickInt;
-        in >> boardWidth >> boardHeight >> mineCount >> firstClickInt >> elapsedTime >> flaggedMines;
-        firstClick = (firstClickInt == 1);
-        setupBoard(boardWidth, boardHeight, mineCount, elapsedTime, flaggedMines);
+    QSettings settings(fileName, QSettings::IniFormat);
 
-        for (int i = 0; i < boardWidth; ++i) {
-            for (int j = 0; j < boardHeight; ++j) {
-                int hasMineInt, isRevealedInt, isFlaggedInt, number;
-                in >> hasMineInt >> number >> isRevealedInt >> isFlaggedInt;
-                cells[i][j]->setMine(hasMineInt == 1);
-                cells[i][j]->setNumber(number);
-                if (isRevealedInt == 1) cells[i][j]->reveal();
-                if (isFlaggedInt == 1) cells[i][j]->toggleFlag();
+    settings.beginGroup("GameState");
+    boardWidth = settings.value("Width").toInt();
+    boardHeight = settings.value("Height").toInt();
+    mineCount = settings.value("MineCount").toInt();
+    flaggedMines = settings.value("FlaggedMines").toInt();
+    elapsedTime = settings.value("ElapsedTime").toInt();
+    setupBoard(boardWidth, boardHeight, mineCount, elapsedTime, flaggedMines);
+    settings.endGroup();
+
+    firstClick = false;
+    settings.beginGroup("Cells");
+    for (int x = 0; x < boardWidth; ++x) {
+        for (int y = 0; y < boardHeight; ++y) {
+            QString key = QString("Cell_%1_%2").arg(x).arg(y);
+            bool mine = settings.value(key + "_Mine").toBool();
+            int number = settings.value(key + "_Number").toInt();
+            bool revealed = settings.value(key + "_Revealed").toBool();
+            bool flagged = settings.value(key + "_Flagged").toBool();
+            qDebug() << "Cell_" << x << "_" << y << " Mine: " << mine << " Number: " << number;
+            cells[x][y]->setMine(mine);
+            cells[x][y]->setNumber(number);
+            if (revealed) {
+                cells[x][y]->reveal();
+            }
+            if (flagged) {
+                cells[x][y]->toggleFlag();
             }
         }
-        timerLabel->setText("Time: " + QString::number(elapsedTime));
-        if (!firstClick) {
-            startTimer();
-        }
-        file.close();
     }
+    settings.endGroup();
+
+    startTimer();
 }
 
 void GameBoard::setupBoard(int width, int height, int mines, int time, int flMines) {
@@ -68,8 +85,8 @@ void GameBoard::setupBoard(int width, int height, int mines, int time, int flMin
     boardHeight = height;
     mineCount = mines;
     flaggedMines = flMines;
-    firstClick = true;
     elapsedTime = time;
+    firstClick = true;
     timer->stop();
     timerLabel->setText("Time: " + QString::number(elapsedTime));
     updateMineCounter();
@@ -91,7 +108,6 @@ void GameBoard::setupBoard(int width, int height, int mines, int time, int flMin
             gridLayout->addWidget(cells[i][j], i, j);
             connect(cells[i][j], &GameCell::cellClicked, this, &GameBoard::handleCellClick);
             connect(cells[i][j], &GameCell::cellRightClicked, this, &GameBoard::handleCellRightClick);
-            connect(cells[i][j], &GameCell::cellMiddleClicked, this, &GameBoard::handleCellMiddleClick);
             connect(cells[i][j], &GameCell::middleButtonPressed, this, &GameBoard::handleCellMiddlePress);
             connect(cells[i][j], &GameCell::middleButtonReleased, this, &GameBoard::handleCellMiddleRelease);
         }
@@ -148,6 +164,7 @@ void GameBoard::updateNumbers() {
 }
 
 void GameBoard::revealCell(int x, int y) {
+    updateNumbers();
     if (x < 0 || x >= boardWidth || y < 0 || y >= boardHeight || cells[x][y]->isRevealed() || cells[x][y]->isFlagged()) {
         return;
     }
@@ -171,10 +188,11 @@ void GameBoard::revealEmptyCells(int x, int y) {
 void GameBoard::revealAllMines(bool reveal) {
     for (int i = 0; i < boardWidth; ++i) {
         for (int j = 0; j < boardHeight; ++j) {
-            cells[i][j]->reveal();
             if (cells[i][j]->hasMine()) {
                 if (reveal) {
                     cells[i][j]->setIcon(QIcon(":/icons/bomb.png"));
+                } else if (cells[i][j]->isFlagged()) {
+                    cells[i][j]->setIcon(QIcon(":/icons/flag.png"));
                 } else if (!cells[i][j]->isRevealed()) {
                     cells[i][j]->setIcon(QIcon(":/icons/cell.png"));
                 }
@@ -182,7 +200,6 @@ void GameBoard::revealAllMines(bool reveal) {
         }
     }
 }
-
 
 void GameBoard::gameOver(bool won, int lastX, int lastY) {
     if (lastX != -1 && lastY != -1) {
@@ -222,9 +239,7 @@ void GameBoard::handleCellRightClick(int x, int y) {
     updateMineCounter();
 }
 
-
-void GameBoard::handleCellMiddleClick(int x, int y) {
-    qDebug() << "Cell middle-clicked at (" << x << ", " << y << ")";
+void GameBoard::handleCellMiddlePress(int x, int y) {
     if (!cells[x][y]->isRevealed()) return;
 
     int flaggedCount = 0;
@@ -242,8 +257,9 @@ void GameBoard::handleCellMiddleClick(int x, int y) {
             for (int dy = -1; dy <= 1; ++dy) {
                 int nx = x + dx;
                 int ny = y + dy;
-                if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight)
+                if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight) {
                     revealCell(x + dx, y + dy);
+                }
             }
         }
     } else {
@@ -252,35 +268,23 @@ void GameBoard::handleCellMiddleClick(int x, int y) {
                 int nx = x + dx;
                 int ny = y + dy;
                 if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && !cells[nx][ny]->isRevealed() && !cells[nx][ny]->isFlagged()) {
-//                    cells[nx][ny]->setStyleSheet("background-color: rgb(64, 64, 64);");
+                    cells[nx][ny]->setTemporaryIcon(true);
                 }
             }
         }
     }
 }
 
-void GameBoard::handleCellMiddlePress(int x, int y) {
+void GameBoard::handleCellMiddleRelease(int x, int y) {
     for (int dx = -1; dx <= 1; ++dx) {
         for (int dy = -1; dy <= 1; ++dy) {
             int nx = x + dx;
             int ny = y + dy;
-            if (nx >= 0 && nx < boardWidth && ny >= 0 && ny < boardHeight && !cells[nx][ny]->isRevealed() && !cells[nx][ny]->isFlagged()) {
-                cells[nx][ny]->setTemporaryIcon(true);
+            if (nx > 0 && nx < boardWidth && ny > 0 && ny < boardHeight && !cells[nx][ny]->isRevealed() && !cells[nx][ny]->isFlagged()) {
+                cells[nx][ny]->setTemporaryIcon(false);
             }
         }
     }
-}
-
-void GameBoard::handleCellMiddleRelease(int x, int y) {
-for (int dx = -1; dx <= 1; ++dx) {
-    for (int dy = -1; dy <= 1; ++dy) {
-        int nx = x + dx;
-        int ny = y + dy;
-        if (nx > 0 && nx < boardWidth && ny > 0 && ny < boardHeight && !cells[nx][ny]->isRevealed() && !cells[nx][ny]->isFlagged()) {
-            cells[nx][ny]->setTemporaryIcon(false);
-        }
-    }
-}
 }
 
 void GameBoard::checkForWin() {
@@ -296,7 +300,6 @@ void GameBoard::checkForWin() {
         gameOver(true);
     }
 }
-
 
 void GameBoard::updateTimer() {
     timerLabel->setText("Time: " + QString::number(++elapsedTime));

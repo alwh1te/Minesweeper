@@ -180,7 +180,7 @@ build Minesweeper_autogen/EWIEGA46WW/qrc_resources.cpp | ${cmake_ninja_workdir}M
 #############################################
 # Phony custom command for CMakeFiles/Minesweeper_autogen_timestamp_deps
 
-build CMakeFiles/Minesweeper_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/Minesweeper_autogen_timestamp_deps: phony /Users/alw/Anaconda/anaconda3/lib/libQt5Gui.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Core.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Widgets.5.15.2.dylib /Users/alw/Anaconda/anaconda3/bin/uic /Users/alw/Anaconda/anaconda3/bin/moc
+build CMakeFiles/Minesweeper_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/Minesweeper_autogen_timestamp_deps: phony /Users/alw/Anaconda/anaconda3/bin/uic /Users/alw/Anaconda/anaconda3/lib/libQt5Core.5.15.2.dylib /Users/alw/Anaconda/anaconda3/lib/libQt5Gui.5.15.2.dylib /Users/alw/Anaconda/anaconda3/bin/moc /Users/alw/Anaconda/anaconda3/lib/libQt5Widgets.5.15.2.dylib
 
 
 #############################################

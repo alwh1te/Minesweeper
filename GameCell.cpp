@@ -1,7 +1,4 @@
 #include "GameCell.h"
-#include <QFont>
-#include <QPainter>
-#include <QStyleOptionButton>
 
 GameCell::GameCell(int x, int y, QWidget *parent)
     : QPushButton(parent), posX(x), posY(y), mine(false), number(0), revealed(false), flagged(false) {
@@ -16,8 +13,6 @@ GameCell::GameCell(int x, int y, QWidget *parent)
     QFont monoFont("Courier New", 18, QFont::Bold);
     setFont(monoFont);
     setText("");
-//    setStyleSheet("padding: 5px;");
-//    setContentsMargins(3, 3, 3, 3);
 }
 
 void GameCell::paintEvent(QPaintEvent *event) {
@@ -111,7 +106,7 @@ void GameCell::mouseReleaseEvent(QMouseEvent *event) {
 void GameCell::setTemporaryIcon(bool temporary) {
     temporaryIcon = temporary;
     if (temporaryIcon) {
-        setIcon(QIcon(":/icons/q.png"));
+        setIcon(QIcon(":/icons/empty.png"));
     } else {
         setIcon(QIcon(":/icons/cell.png"));
     }

@@ -15,6 +15,8 @@
 #include <QWidget>
 #include <QTimer>
 #include <QLabel>
+#include <QSettings>
+
 
 class GameBoard : public QWidget {
     Q_OBJECT
@@ -57,7 +59,6 @@ signals:
 private slots:
     void handleCellClick(int x, int y);
     void handleCellRightClick(int x, int y);
-    void handleCellMiddleClick(int x, int y);
     void handleCellMiddlePress(int x, int y);
     void handleCellMiddleRelease(int x, int y);
     void updateTimer();
