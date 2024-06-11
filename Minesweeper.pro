@@ -9,12 +9,14 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     gameboard.cpp \
-    gamecell.cpp
+    gamecell.cpp \
+    newgamedialog.cpp
 
 HEADERS += \
     mainwindow.h \
     gameboard.h \
-    gamecell.h
+    gamecell.h \
+    newgamedialog.h
 
 RESOURCES += \
     resources.qrc
