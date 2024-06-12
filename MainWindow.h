@@ -7,11 +7,13 @@
 #include "NewGameDialog.h"
 
 #include <QAction>
+#include <QApplication>
 #include <QDir>
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QToolBar>
+#include <QTranslator>
 
 class MainWindow : public QMainWindow
 {
@@ -25,6 +27,8 @@ class MainWindow : public QMainWindow
 	void newGame();
 	void gameFinished(bool won);
 	void toggleDebugMode(bool checked);
+	void switchToEnglish();
+	void switchToRussian();
 
   protected:
 	void resizeEvent(QResizeEvent *event) override;
@@ -32,11 +36,16 @@ class MainWindow : public QMainWindow
   private:
 	void createMenus();
 	void createToolBar();
+	void retranslateUi();
 	bool debugMode;
 	bool gameOver;
 	GameBoard *gameBoard;
 	QString saveFileName;
 	QAction *debugAction;
+	QAction *switchToEnglishAction;
+	QAction *switchToRussianAction;
+	QTranslator translator;
+	void updateToolBar();
 };
 
-#endif	  // MINESWEEPER_MAINWINDOW_H
+#endif // MINESWEEPER_MAINWINDOW_H

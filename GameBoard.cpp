@@ -9,7 +9,7 @@ GameBoard::GameBoard(QWidget *parent) :
 	mineCounterLabel = new QLabel(this);
 	connect(timer, &QTimer::timeout, this, &GameBoard::updateTimer);
 	updateMineCounter();
-	timerLabel->setText("Time: 0");
+	timerLabel->setText(tr("Time: ") + QString::number(0));
 }
 
 GameBoard::~GameBoard()
@@ -101,7 +101,7 @@ void GameBoard::setupBoard(int width, int height, int mines, int time, int flMin
 	elapsedTime = time;
 	firstClick = true;
 	timer->stop();
-	timerLabel->setText("Time: " + QString::number(elapsedTime));
+	timerLabel->setText(tr("Time: ") + QString::number(elapsedTime));
 	updateMineCounter();
 
 	QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -387,12 +387,12 @@ void GameBoard::checkForWin()
 
 void GameBoard::updateTimer()
 {
-	timerLabel->setText("Time: " + QString::number(++elapsedTime));
+	timerLabel->setText(tr("Time: ") + QString::number(++elapsedTime));
 }
 
 void GameBoard::updateMineCounter()
 {
-	mineCounterLabel->setText("Mines: " + QString::number(mineCount - flaggedMines));
+	mineCounterLabel->setText(tr("Mines: ") + QString::number(mineCount - flaggedMines));
 }
 
 void GameBoard::startTimer()

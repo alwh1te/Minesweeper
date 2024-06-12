@@ -29,6 +29,7 @@ MainWindow::~MainWindow()
 	}
 	delete gameBoard;
 }
+
 void MainWindow::createMenus()
 {
 	QMenu *gameMenu = menuBar()->addMenu(tr("Game"));
@@ -41,11 +42,31 @@ void MainWindow::createMenus()
 		debugAction->setCheckable(true);
 		connect(debugAction, &QAction::toggled, this, &MainWindow::toggleDebugMode);
 	}
+
+	QMenu *languageMenu = menuBar()->addMenu(tr("Language"));
+	switchToEnglishAction = languageMenu->addAction(tr("English"));
+	switchToRussianAction = languageMenu->addAction(tr("Русский"));
+
+	connect(switchToEnglishAction, &QAction::triggered, this, &MainWindow::switchToEnglish);
+	connect(switchToRussianAction, &QAction::triggered, this, &MainWindow::switchToRussian);
 }
 
 void MainWindow::createToolBar()
 {
-	QToolBar *toolBar = addToolBar(tr("Game"));
+	updateToolBar();
+}
+
+void MainWindow::updateToolBar()
+{
+	QToolBar *toolBar = findChild<QToolBar*>("gameToolBar");
+	if (toolBar)
+	{
+		removeToolBar(toolBar);
+		delete toolBar;
+	}
+
+	toolBar = addToolBar(tr("Game"));
+	toolBar->setObjectName("gameToolBar");
 	QAction *newGameAction = new QAction(tr("New Game"), this);
 	toolBar->addAction(newGameAction);
 	connect(newGameAction, &QAction::triggered, this, &MainWindow::newGame);
@@ -104,4 +125,27 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 	QSize newSize = event->size();
 	int side = qMin(newSize.width(), newSize.height());
 	resize(side, side);
+}
+
+void MainWindow::switchToEnglish()
+{
+	qApp->removeTranslator(&translator);
+	translator.load(":/translations/minesweeper_en.qm");
+	qApp->installTranslator(&translator);
+	retranslateUi();
+}
+
+void MainWindow::switchToRussian()
+{
+	qApp->removeTranslator(&translator);
+	translator.load(":/translations/minesweeper_ru.qm");
+	qApp->installTranslator(&translator);
+	retranslateUi();
+}
+
+void MainWindow::retranslateUi()
+{
+	menuBar()->clear();
+	createMenus();
+	updateToolBar();
 }
