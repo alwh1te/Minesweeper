@@ -21,4 +21,7 @@ HEADERS += \
 RESOURCES += \
     resources.qrc
 
+TRANSLATIONS += translations/minesweeper_en.ts \
+               translations/minesweeper_ru.ts
+
 INCLUDEPATH += .
