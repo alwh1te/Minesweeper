@@ -48,4 +48,4 @@ class MainWindow : public QMainWindow
 	void updateToolBar();
 };
 
-#endif // MINESWEEPER_MAINWINDOW_H
+#endif	  // MINESWEEPER_MAINWINDOW_H

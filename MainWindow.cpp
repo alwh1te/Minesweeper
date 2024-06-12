@@ -58,7 +58,7 @@ void MainWindow::createToolBar()
 
 void MainWindow::updateToolBar()
 {
-	QToolBar *toolBar = findChild<QToolBar*>("gameToolBar");
+	QToolBar *toolBar = findChild< QToolBar * >("gameToolBar");
 	if (toolBar)
 	{
 		removeToolBar(toolBar);

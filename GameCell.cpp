@@ -119,9 +119,7 @@ void GameCell::mousePressEvent(QMouseEvent *event)
 	{
 		emit cellRightClicked(posX, posY);
 	}
-	else if (event->button() == Qt::MiddleButton
-			 || event->button() == Qt::ForwardButton
-			 || event->button() == Qt::BackButton)
+	else if (event->button() == Qt::MiddleButton || event->button() == Qt::ForwardButton || event->button() == Qt::BackButton)
 	{
 		emit middleButtonPressed(posX, posY);
 	}
@@ -129,9 +127,7 @@ void GameCell::mousePressEvent(QMouseEvent *event)
 
 void GameCell::mouseReleaseEvent(QMouseEvent *event)
 {
-	if (event->button() == Qt::MiddleButton
-		|| event->button() == Qt::ForwardButton
-		|| event->button() == Qt::BackButton)
+	if (event->button() == Qt::MiddleButton || event->button() == Qt::ForwardButton || event->button() == Qt::BackButton)
 	{
 		emit middleButtonReleased(posX, posY);
 	}

@@ -66,8 +66,7 @@ void GameBoard::loadGameState(const QString &fileName)
 	flaggedMines = settings.value("FlaggedMines", -1).toInt();
 	elapsedTime = settings.value("ElapsedTime", -1).toInt();
 
-	if (boardWidth <= 0 || boardHeight <= 0 || mineCount < 0
-		|| flaggedMines < 0 || elapsedTime < 0)
+	if (boardWidth <= 0 || boardHeight <= 0 || mineCount < 0 || flaggedMines < 0 || elapsedTime < 0)
 	{
 		valid = false;
 	}
@@ -89,7 +88,7 @@ void GameBoard::loadGameState(const QString &fileName)
 			}
 		}
 	}
-	label:
+label:
 
 	settings.endGroup();
 
@@ -131,7 +130,6 @@ void GameBoard::loadGameState(const QString &fileName)
 
 	startTimer();
 }
-
 
 void GameBoard::setupBoard(int width, int height, int mines, int time, int flMines)
 {
