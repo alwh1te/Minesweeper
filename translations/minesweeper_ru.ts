@@ -20,7 +20,7 @@
 </message>
 <message>
 <source>English</source>
-<translation>Английский</translation>
+<translation>English</translation>
 </message>
 <message>
 <source>Русский</source>
