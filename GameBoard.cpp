@@ -7,6 +7,9 @@ GameBoard::GameBoard(QWidget *parent) :
 	timer = new QTimer(this);
 	timerLabel = new QLabel(this);
 	mineCounterLabel = new QLabel(this);
+	QLabel *note = new QLabel(this);
+	note->setText(tr("Use mouse 5 and mouse 4 buttons like analog for middle mouse button"));
+	note->adjustSize();
 	connect(timer, &QTimer::timeout, this, &GameBoard::updateTimer);
 	updateMineCounter();
 	timerLabel->setText(tr("Time: ") + QString::number(0));

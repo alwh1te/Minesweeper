@@ -77,5 +77,10 @@
 <source>Mines: </source>
 <translation>Мины: </translation>
 </message>
+<message>
+<source>Use mouse 5 and mouse 4 buttons like analog for middle mouse button</source>
+<translation>Используйте кнопки мыши 5 и 4 как аналог для СКМ</translation>
+</message>
 </context>
+
 </TS>
