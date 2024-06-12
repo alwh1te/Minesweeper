@@ -132,7 +132,7 @@ void MainWindow::switchToEnglish()
 	qApp->removeTranslator(&translator);
 	translator.load(":/translations/minesweeper_en.qm");
 	qApp->installTranslator(&translator);
-	retranslateUi();
+	translateUi();
 }
 
 void MainWindow::switchToRussian()
@@ -140,10 +140,10 @@ void MainWindow::switchToRussian()
 	qApp->removeTranslator(&translator);
 	translator.load(":/translations/minesweeper_ru.qm");
 	qApp->installTranslator(&translator);
-	retranslateUi();
+	translateUi();
 }
 
-void MainWindow::retranslateUi()
+void MainWindow::translateUi()
 {
 	menuBar()->clear();
 	createMenus();

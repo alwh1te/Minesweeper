@@ -36,7 +36,7 @@ class MainWindow : public QMainWindow
   private:
 	void createMenus();
 	void createToolBar();
-	void retranslateUi();
+	void translateUi();
 	bool debugMode;
 	bool gameOver;
 	GameBoard *gameBoard;

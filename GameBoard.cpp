@@ -66,7 +66,8 @@ void GameBoard::loadGameState(const QString &fileName)
 	flaggedMines = settings.value("FlaggedMines", -1).toInt();
 	elapsedTime = settings.value("ElapsedTime", -1).toInt();
 
-	if (boardWidth <= 0 || boardHeight <= 0 || mineCount < 0 || flaggedMines < 0 || elapsedTime < 0)
+	if (boardWidth <= 0 || boardHeight <= 0 || mineCount < 0
+		|| flaggedMines < 0 || elapsedTime < 0)
 	{
 		valid = false;
 	}
@@ -95,12 +96,10 @@ void GameBoard::loadGameState(const QString &fileName)
 	if (!valid)
 	{
 		QMessageBox::warning(this, tr("Invalid autosave data"), tr("Invalid save file. Starting a new game with default settings."));
-
 		setupBoard(10, 10, 10, 0, 0);
 		return;
 	}
 
-	// Load the game state if the save file is valid
 	settings.beginGroup("GameState");
 	setupBoard(boardWidth, boardHeight, mineCount, elapsedTime, flaggedMines);
 	settings.endGroup();
@@ -116,7 +115,6 @@ void GameBoard::loadGameState(const QString &fileName)
 			int number = settings.value(key + "_Number").toInt();
 			bool revealed = settings.value(key + "_Revealed").toBool();
 			bool flagged = settings.value(key + "_Flagged").toBool();
-			qDebug() << "Cell_" << x << "_" << y << " Mine: " << mine << " Number: " << number;
 			cells[x][y]->setMine(mine);
 			cells[x][y]->setNumber(number);
 			if (revealed)
