@@ -81,6 +81,14 @@
 <source>Use mouse 5 and mouse 4 buttons like analog for middle mouse button</source>
 <translation>Используйте кнопки мыши 5 и 4 как аналог для СКМ</translation>
 </message>
+<message>
+<source>Invalid autosave data</source>
+<translation>Файл сохранения испорчен</translation>
+</message>
+<message>
+<source>Invalid save file. Starting a new game with default settings.</source>
+<translation>Файл сохранения испорчен. Игра будет запущена с настройками по умолчанию</translation>
+</message>
 </context>
 
 </TS>

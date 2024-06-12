@@ -58,11 +58,50 @@ void GameBoard::loadGameState(const QString &fileName)
 	QSettings settings(fileName, QSettings::IniFormat);
 
 	settings.beginGroup("GameState");
-	boardWidth = settings.value("Width").toInt();
-	boardHeight = settings.value("Height").toInt();
-	mineCount = settings.value("MineCount").toInt();
-	flaggedMines = settings.value("FlaggedMines").toInt();
-	elapsedTime = settings.value("ElapsedTime").toInt();
+	bool valid = true;
+
+	boardWidth = settings.value("Width", -1).toInt();
+	boardHeight = settings.value("Height", -1).toInt();
+	mineCount = settings.value("MineCount", -1).toInt();
+	flaggedMines = settings.value("FlaggedMines", -1).toInt();
+	elapsedTime = settings.value("ElapsedTime", -1).toInt();
+
+	if (boardWidth <= 0 || boardHeight <= 0 || mineCount < 0 || flaggedMines < 0 || elapsedTime < 0)
+	{
+		valid = false;
+	}
+
+	settings.endGroup();
+
+	settings.beginGroup("Cells");
+
+	for (int x = 0; x < boardWidth; ++x)
+	{
+		for (int y = 0; y < boardHeight; ++y)
+		{
+			QString key = QString("Cell_%1_%2").arg(x).arg(y);
+			if (!settings.contains(key + "_Mine") || !settings.contains(key + "_Number") ||
+				!settings.contains(key + "_Revealed") || !settings.contains(key + "_Flagged"))
+			{
+				valid = false;
+				goto label;
+			}
+		}
+	}
+	label:
+
+	settings.endGroup();
+
+	if (!valid)
+	{
+		QMessageBox::warning(this, tr("Invalid autosave data"), tr("Invalid save file. Starting a new game with default settings."));
+
+		setupBoard(10, 10, 10, 0, 0);
+		return;
+	}
+
+	// Load the game state if the save file is valid
+	settings.beginGroup("GameState");
 	setupBoard(boardWidth, boardHeight, mineCount, elapsedTime, flaggedMines);
 	settings.endGroup();
 
@@ -94,6 +133,7 @@ void GameBoard::loadGameState(const QString &fileName)
 
 	startTimer();
 }
+
 
 void GameBoard::setupBoard(int width, int height, int mines, int time, int flMines)
 {
