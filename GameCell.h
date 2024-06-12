@@ -45,7 +45,7 @@ class GameCell : public QPushButton
 	QIcon flagIcon;
 	QIcon emptyIcon;
 	QIcon cellIcon;
-	void paintEvent(QPaintEvent *event);
+	void paintEvent(QPaintEvent *event) override;
 	QColor getColorForNumber(int number);
 };
 
